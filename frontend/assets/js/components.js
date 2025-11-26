@@ -2,7 +2,7 @@
 
 function createHeader() {
 
-    const header = document.createElement('header')
+    const header = document.getElementById('header')
 
     const perfilIcons = document.createElement('div')
     perfilIcons.classList.add('perfil-icons')
@@ -46,8 +46,6 @@ function createHeader() {
     header.appendChild(perfilIcons)
     header.appendChild(gnnContainer)
     header.appendChild(menuIcons)
-    document.body.appendChild(header)
-
 
 }
 
@@ -86,16 +84,16 @@ function createFooter() {
             linkedin: 'https://www.linkedin.com/in/gabryel-fillipe/'
         },
         {
-            nome: 'Nome do Dev 2',
+            nome: 'Nicolas Durão',
             funcao: 'Back-end & API',
-            github: 'link-git-2',
-            linkedin: 'link-in-2'
+            github: 'https://github.com/nicolas16-sd',
+            linkedin: 'https://www.linkedin.com/in/nicolas-durao/'
         },
         {
-            nome: 'Nome do Dev 3',
+            nome: 'Nikolas Fernandes',
             funcao: 'Database & DevOps',
-            github: 'link-git-3',
-            linkedin: 'link-in-3'
+            github: 'https://github.com/nikolasfernnds',
+            linkedin: 'https://www.linkedin.com/in/nikolasfernnds/'
         }
     ]
 

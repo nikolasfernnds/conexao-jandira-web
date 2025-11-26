@@ -14,9 +14,17 @@
     --amarelo-favo: #C4A13E;
     --bg-color: #16212B;
     --bg-body: #0E1921;
-    --default-gradient: linear-gradient(90deg, rgba(22, 33, 43, 0.95) 50%, rgba(25, 41, 57, 0.95) 50%);
     --bg-modal: #16212B;
     --bg-input: rgba(0, 0, 0, 0.3);
+
+    --default-gradient: linear-gradient(90deg, rgba(22, 33, 43, 0.95) 50%, rgba(25, 41, 57, 0.95) 50%);
+    --overlay-gradient: linear-gradient(to top,
+            #16212B 0%,
+            rgba(22, 33, 43, 0.95) 40%,
+            rgba(22, 33, 43, 0.95) 100%);
+    
+    --default-shadow: 0px 4px 12px #40000000;
+
 
     --text-white: #ffffff;
     --text-gray: #b0b0b0;
@@ -36,7 +44,8 @@
     --padding-md: 16px;
     --padding-sm: 8px;
 
-    --defafult-border: 1px solid var(--amarelo-favo);
+    --default-border: 1px solid var(--amarelo-favo);
+    --modal-border: 2px solid var(--amarelo-ouro);
 }
 
 body {
