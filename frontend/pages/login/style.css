@@ -128,6 +128,7 @@ main{
     padding-block: var(--padding-sm);
     margin-bottom: 0;
     height: 32px;
+    color: var(--text-white);
 }
 
 .input-cadastro::placeholder{
@@ -167,4 +168,35 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 input[type="password"]{
     color: var(--text-white);
+}
+.modal-cadastro .password-container{
+    width: 80%;
+}
+.password-container {
+    position: relative;
+    max-width: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+.btn-eye {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-white);
+    padding: 0;
+    z-index: 10;
+}
+
+.password-container .input{
+    width: 100%;
+    padding-right: 40px; 
+}
+.password-container .input-cadastro{
+    width: 100%;
+    padding-right: 20px; 
 }
