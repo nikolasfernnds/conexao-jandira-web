@@ -28,7 +28,7 @@ main{
     padding-bottom: var(--padding-sm);
 }
 
-.input-login{
+.input{
     border: var(--default-border);
     background-color: var(--preto-transparente);
     border-radius: var(--radius-sm);
@@ -37,7 +37,7 @@ main{
     padding-block: var(--padding-sm);
 }
 
-.input-login::placeholder{
+.input::placeholder{
     color: var(--text-white);
     font-size: 16px;
     padding-inline: 12px;
@@ -48,6 +48,18 @@ main{
     color: var(--text-black);
     padding-block: var(--padding-sm);
     font-size: 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+}
+
+.btn-cancelar{
+    color: var(--text-white);
+    border: var(--default-border);
+    background-color: var(--preto-transparente);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    min-width: 100px;
+    padding-block: var(--padding-sm);
 }
 
 .opcoes{
@@ -62,17 +74,97 @@ main{
     display: none;
 }
 
+.modal-cadastro-overlay{
+    width: 100%;
+    height: 90%;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 1000;
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .modal-cadastro{
     width: 90%;
-    height: 80%;
-    position: absolute;
+    height: auto;
+    /* position: absolute; */
     background-color: var(--primary-color);
     top: 16px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     border: var(--modal-border);
     border-radius: var(--radius-md);
-    margin-block: var(--default-padding);
+    gap: 16px;
+    padding-block: var(--default-padding);
+
+}
+
+.container-input{
+    width: 90%;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    height: auto;
+}
+
+.container-botao{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.input-cadastro{
+    min-width: 230px;
+    border: var(--default-border);
+    background-color: var(--preto-transparente);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    padding-block: var(--padding-sm);
+    margin-bottom: 0;
+    height: 32px;
+}
+
+.input-cadastro::placeholder{
+    color: var(--text-white);
+    font-size: 16px;
+    padding-inline: 12px;
+}
+
+.btn-cadastre{
+    background-color: var(--amarelo-favo);
+    color: var(--text-black);
+    padding-block: var(--padding-sm);
+    padding-inline: var(--padding-sm);
+    font-size: 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+}
+
+input[type="date"] {
+    position: relative;
+    color-scheme: dark; 
+    text-align: center; 
+    cursor: pointer;    
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;  
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;  
+    cursor: pointer;
+}
+
+input[type="password"]{
+    color: var(--text-white);
 }
