@@ -228,7 +228,8 @@ main {
 .preview-image {
     height: 100%;
     width: 100%;
-    border-radius: 50%;
+    object-fit: fill;
+    object-position: center;
 }
 
 .preview-label {
@@ -299,6 +300,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     flex-direction: column;
     color: var(--text-white);
 }
+
+select option{
+    background-color: var(--bg-modal);
+}
+
 
 @media (min-width:768px) {
 
