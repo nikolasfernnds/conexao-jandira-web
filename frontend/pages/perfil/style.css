@@ -107,3 +107,44 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     background-color: var(--preto-transparente);
     color: var(--text-white);
 }
+
+@media (min-width: 768px) {
+    .container-perfil {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 40px;
+        max-width: 90%;
+        margin: 0;
+    }
+
+    .foto-perfil {
+        width: 50%;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        height: 100%;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .informacao-usuario {
+        width: 50%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding-inline: 32px;
+    }
+
+    .informacao-usuario input:nth-child(1),
+    .informacao-usuario input:nth-child(2),
+    .informacao-usuario input:nth-child(5) {
+        grid-column: 1 / -1;
+    }
+
+    input{
+    }
+
+    .informacao-usuario .btn-salvar {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
