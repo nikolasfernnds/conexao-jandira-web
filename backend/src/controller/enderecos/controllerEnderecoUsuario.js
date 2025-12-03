@@ -32,6 +32,16 @@ const listarEnderecos = async function() {
     }
 }
 
+const listarEnderecosPorId = async function(id) {
+    let MESSAGES = JSON.parse(JSON.stringify(defaultMessages))
+
+    try {
+        if(!isNaN(id) && id != "" && id != null && id > 0)
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     listarEnderecos
 }

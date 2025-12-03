@@ -22,6 +22,21 @@ const getSelectAllAddressUsers = async function () {
     }
 }
 
+const getSelectAllAddressUsersById = async function(id) {
+    try {
+        let sql = `SELECT * FROM tbl_endereco_usuario WHERE id_endereco_usuario = ${id}`
+        let result = await prisma.$queryRawUnsafe(sql)
+
+        if(Array.isArray(result))
+            return result
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports = {
-    getSelectAllAddressUsers
+    getSelectAllAddressUsers,
+    getSelectAllAddressUsersById
 }
