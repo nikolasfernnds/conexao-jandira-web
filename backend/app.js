@@ -11,6 +11,7 @@ const bodyParser = require('body-parser')
 const bodyParserJSON = bodyParser.json()
 
 const usuarioRoutes = require('./src/routes/usuario/usuarioRoutes.js')
+const enderecoUsuarioRoutes = require('./src/routes/enderecos/enderecoUsuarioRoutes.js')
 
 const PORT = process.env.PORT || 8080
 const app = express()
@@ -29,4 +30,4 @@ app.listen(PORT, function(){
 })
 
 app.use('/v1/gnn/usuarios', usuarioRoutes)
-
+app.use('/v1/gnn/endereco/usuario', enderecoUsuarioRoutes)
