@@ -104,7 +104,8 @@ const cadastrarUsuario = async function (contentType, usuario) {
 
         if (String(contentType).toLowerCase() === 'application/json') {
 
-            let validar = await validarDadosUsuario(usuario)
+            let validar = await validarDadosUsuario(usuario, false)
+            console.log(validar)
 
             if (validar === false) {
 
@@ -168,7 +169,7 @@ const atualizarUsuario = async function (id, contentType, usuario) {
             return MESSAGES.ERROR_INVALID_ID
         }
 
-        let validar = validarDadosUsuario(usuario)
+        let validar = validarDadosUsuario(usuario, true)
 
         if (validar === false) {
 
@@ -195,7 +196,7 @@ const atualizarUsuario = async function (id, contentType, usuario) {
             }
 
         } else {
-            return validar 
+            return validar
         }
 
     } catch (error) {
@@ -204,7 +205,7 @@ const atualizarUsuario = async function (id, contentType, usuario) {
 }
 
 const excluirUsuario = async function (id) {
-    
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
@@ -218,7 +219,7 @@ const excluirUsuario = async function (id) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_REQUEST.status
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_REQUEST.status_code
             MESSAGES.DEFAULT_HEADER.message = "Usuário excluído com sucesso."
-            
+
             delete MESSAGES.DEFAULT_HEADER.itens
 
             return MESSAGES.DEFAULT_HEADER
@@ -233,32 +234,33 @@ const excluirUsuario = async function (id) {
 
 
 
-const validarDadosUsuario = function (dadosBody) {
+const validarDadosUsuario = function (dadosBody, isUpdate = false) {
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if (!dadosBody.nome_completo || dadosBody.nome_completo.length > 150) {
-        MESSAGES.ERROR_REQUIRED_FIELDS.MESSAGES += ' [Nome inválido]'
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Nome inválido]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
     }
 
-    else if (!dadosBody.nickname || dadosBody.nickname.length > 50) {
-        MESSAGES.ERROR_REQUIRED_FIELDS.MESSAGES += ' [Nickname inválido]'
+    if (!dadosBody.nickname || dadosBody.nickname.length > 50) {
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Nickname inválido]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
     }
 
-    else if (!dadosBody.email || dadosBody.email.length > 150 || !dadosBody.email.includes('@')) {
-        MESSAGES.ERROR_REQUIRED_FIELDS.MESSAGES += ' [Email inválido]'
+    if (!dadosBody.email || dadosBody.email.length > 150 || !dadosBody.email.includes('@')) {
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Email inválido]'
         return MESSAGES.ERROR_REQUIRED_FIELDS
     }
 
-    else if (!dadosBody.senha || dadosBody.senha === '') {
-        MESSAGES.ERROR_REQUIRED_FIELDS.MESSAGES += ' [Senha obrigatória]'
-        return MESSAGES.ERROR_REQUIRED_FIELDS
+    if (!isUpdate) {
+        if (!dadosBody.senha || dadosBody.senha === '') {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Senha obrigatória]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
     }
-    else {
-        return false
-    }
+
+    return false
 }
 module.exports = {
     listarUsuarios,
