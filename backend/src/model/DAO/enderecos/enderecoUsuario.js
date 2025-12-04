@@ -50,7 +50,6 @@ const getSelectLastId = async function() {
     }
 }
 
-
 module.exports = {
     getSelectAllAddressUsers,
     getSelectAllAddressUsersById,
