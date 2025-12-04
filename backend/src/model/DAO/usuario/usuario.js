@@ -10,7 +10,22 @@ const prisma = new PrismaClient()
 
 const getSelectAllUsers = async function () {
     try {
-        let sql = `SELECT * FROM tbl_usuario WHERE status_conta = 1 ORDER BY id_usuario DESC`
+        let sql = `
+            SELECT 
+                id_usuario, 
+                id_endereco_usuario, 
+                nome_completo, 
+                nickname, 
+                perfil, 
+                email, 
+                data_nascimento, 
+                foto_perfil, 
+                telefone, 
+                status_conta 
+            FROM tbl_usuario 
+            WHERE status_conta = 1 
+            ORDER BY id_usuario DESC
+        `
         let result = await prisma.$queryRawUnsafe(sql)
         return result
     } catch (error) {
