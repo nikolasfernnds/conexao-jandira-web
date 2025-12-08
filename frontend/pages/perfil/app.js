@@ -193,6 +193,7 @@ async function carregarDadosPerfil() {
     const id = usuarioLogado.id_usuario
 
     const resultado = await listarUsuario(id)
+    console.log(resultado)
 
     if (resultado.status) {
         const dados = resultado.itens

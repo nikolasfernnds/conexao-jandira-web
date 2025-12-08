@@ -36,7 +36,7 @@ export async function cadastrarUsuario(usuario) {
 }
 
 export async function listarUsuario(id) {
-    const url = `https://corsproxy.io/?url=https://gnn-jandira.onrender.com/v1/gnn/usuarios/perfil/${id}`
+    const url = `https://gnn-jandira.onrender.com/v1/gnn/usuarios/perfil/${id}`
     // const url = `http://localhost:8080/v1/gnn/usuarios/perfil/${id}`
     const options = {
         method: 'GET',
