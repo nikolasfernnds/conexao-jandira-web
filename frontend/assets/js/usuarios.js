@@ -36,8 +36,8 @@ export async function cadastrarUsuario(usuario) {
 }
 
 export async function listarUsuario(id) {
-    // const url = `https://corsproxy.io/?url=https://gnn-jandira.onrender.com/v1/gnn/usuarios/perfil/${nickname}`
-    const url = `http://localhost:8080/v1/gnn/usuarios/perfil/${id}`
+    const url = `https://corsproxy.io/?url=https://gnn-jandira.onrender.com/v1/gnn/usuarios/perfil/${nickname}`
+    // const url = `http://localhost:8080/v1/gnn/usuarios/perfil/${id}`
     const options = {
         method: 'GET',
         headers: {
@@ -50,8 +50,8 @@ export async function listarUsuario(id) {
 }
 
 export async function atualizarUsuario(id, dados) {
-    const url = `http://localhost:8080/v1/gnn/usuarios/${id}`
-    // const url = `https://corsproxy.io/?url=https://gnn-jandira.onrender.com/v1/gnn/usuarios/${id}`
+    // const url = `http://localhost:8080/v1/gnn/usuarios/${id}`
+    const url = `https://corsproxy.io/?url=https://gnn-jandira.onrender.com/v1/gnn/usuarios/${id}`
     
     const options = {
         method: 'PUT',
