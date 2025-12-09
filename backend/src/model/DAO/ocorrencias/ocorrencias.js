@@ -82,9 +82,9 @@ const getSelectLastId = async function() {
 
 const setInsertOccurences = async function (ocorrencia) {
     try {
-        const jsonData = JSON.stringify(ocorrencia)
-        const sql = `CALL sp_criar_ocorrencia('${jsonData}')`
-        const result = await prisma.$queryRawUnsafe(sql)
+        let jsonData = JSON.stringify(ocorrencia)
+        let sql = `CALL sp_criar_ocorrencia('${jsonData}')`
+        let result = await prisma.$queryRawUnsafe(sql)
 
         if (Array.isArray(result) && result[0]) {
             return result[0]
@@ -97,6 +97,18 @@ const setInsertOccurences = async function (ocorrencia) {
     }
 }
 
+const setUpdateStatusOccurences = async function(idOcorrencia, idStatus, idUsuario) {
+    try {
+        let sql = `CALL sp_atualizar_status_ocorrencia(${idOcorrencia}, ${idStatus}, ${idUsuario})`
+        await prisma.$queryRawUnsafe(sql)
+
+        return true
+    } catch (error) {
+        return false
+    }
+}
+
+
 const setDeleteOccurences = async function(id) {
     try {
         let sql = `DELETE from tbl_ocorrencia WHERE id_ocorrencia = ${id}`
@@ -107,6 +119,7 @@ const setDeleteOccurences = async function(id) {
         else    
             return false
     } catch (error) {
+        return false
     }
 }
 
@@ -117,5 +130,6 @@ module.exports = {
     getSelectOccurencesByUser,
     getSelectLastId,
     setInsertOccurences,
+    setUpdateStatusOccurences,
     setDeleteOccurences
 }
