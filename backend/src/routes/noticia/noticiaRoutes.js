@@ -36,7 +36,6 @@ router.post('/', async(req, res) => {
 
 // GET /v1/gnn/noticias (Listar todas as notícias)
 router.get('/', async(req, res) => {
-    // ⚠️ Nome da função no Controller: listarTodasNoticias
     let noticias = await controllerNoticia.listarTodasNoticias() 
     res.status(noticias.status_code).json(noticias)
 })
