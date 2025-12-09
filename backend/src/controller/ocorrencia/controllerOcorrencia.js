@@ -156,6 +156,40 @@ const criarNovaOcorrencia = async function (ocorrencia, contentType) {
     }
 }
 
+const atualizarStatusOcorrencia = async function(ocorrencia, id, contentType) {
+    let MESSAGES = JSON.parse(JSON.stringify(defaultMessages))
+
+    try {
+        if(String(contentType).toUpperCase() === 'APPLICATION/JSON'){
+            if(ocorrencia.id_status == undefined || ocorrencia.id_usuario == undefined || isNaN(ocorrencia.id_status) || isNaN(ocorrencia.id_usuario)){
+                MESSAGES.ERROR_REQUIRED_FIELDS.message += '{id_status e id_usuario são obrigatórios}'
+                return MESSAGES.ERROR_REQUIRED_FIELDS
+            }
+
+            let validarId = await buscarOcorrenciaId(Number(id))
+
+            if(validarId.status_code === 200){
+                let result = await ocorrenciaDAO.setUpdateStatusOccurences(id, ocorrencia.id_status, ocorrencia.id_usuario)
+
+                if(result){
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_CREATED_ITEM.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.itens = ocorrencia
+                    return MESSAGES.DEFAULT_HEADER
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                }
+            } else {
+                return validarId
+            }
+        } else {
+            return MESSAGES.ERROR_CONTENT_TYPE
+        }
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
 const excluirOcorrencia = async function(id, contentType) {
     let MESSAGES = JSON.parse(JSON.stringify(defaultMessages));
 
@@ -261,6 +295,7 @@ module.exports = {
     buscarOcorrenciaCategoria,
     buscarOcorrenciaUsuario,
     criarNovaOcorrencia,
+    atualizarStatusOcorrencia,
     excluirOcorrencia,
     validarDadosOcorrencia
 }

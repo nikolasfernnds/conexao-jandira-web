@@ -36,6 +36,11 @@ router.post('/', async(req, res) => {
     res.status(novaOcorrencia.status_code).json(novaOcorrencia)
 })
 
+router.patch('/:id/status', async(req, res) => {
+    let ocorrencia = await controllerOcorrencia.atualizarStatusOcorrencia(req.body, req.params.id, req.headers['content-type'])
+    res.status(ocorrencia.status_code).json(ocorrencia)
+})
+
 router.delete('/:id', async(req, res) => {
     let ocorrencia = await controllerOcorrencia.excluirOcorrencia(req.params.id)
     res.status(ocorrencia.status_code).json(ocorrencia)
