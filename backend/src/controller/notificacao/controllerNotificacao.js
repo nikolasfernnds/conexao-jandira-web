@@ -62,6 +62,124 @@ const buscarNotificacoesId = async function (id) {
     }
 }
 
+const inserirNotificacao = async function(notificacao, contentType) {
+    let MESSAGES = JSON.parse(JSON.stringify(defaultMessages))
+
+    try {
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+            let validar = await validarDadosNotificacao(notificacao)
+
+            if(!validar){
+                let result = await notificacaoDAO.setInsertNotification(notificacao)
+
+                if(result){
+                    let lastId = await notificacaoDAO.getSelectLastId()
+
+                    if(lastId){
+                        notificacao.id = lastId
+
+                        MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_CREATED_ITEM.status
+                        MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_CREATED_ITEM.status_code
+                        MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCESS_CREATED_ITEM.message
+                        MESSAGES.DEFAULT_HEADER.itens = notificacao
+
+                        return MESSAGES.DEFAULT_HEADER
+                    } else {
+                        return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                    }
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                }
+            } else {
+                return validar
+            }
+        } else {
+            return MESSAGES.ERROR_CONTENT_TYPE
+        }
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const atualizarNotificacao = async function(notificacao, id, contentType) {
+    let MESSAGES = JSON.parse(JSON.stringify(defaultMessages));
+
+    try {
+       if (String(contentType).toUpperCase() == "APPLICATION/JSON") {
+             let validar = await validarDadosNotificacao(notificacao);
+       
+             if (!validar) {
+               let validarId = await buscarNotificacoesId(id)
+       
+               if (validarId.status_code == 200) {
+
+                 notificacao.id = Number(id)
+                 let result = await notificacaoDAO.setUpdateNotification(notificacao)
+       
+                 if (result) {
+                   MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_CREATED_ITEM.status
+                   MESSAGES.DEFAULT_HEADER.status_code =MESSAGES.SUCESS_CREATED_ITEM.status_code
+                   MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCESS_CREATED_ITEM.message
+                   MESSAGES.DEFAULT_HEADER.itens.notificacao = notificacao
+    
+                   return MESSAGES.DEFAULT_HEADER
+                 } else {
+                   return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                 }
+               } else {
+                 return validarId 
+               }
+             } else {
+               return validar;
+             }
+           } else {
+             return MESSAGES.ERROR_CONTENT_TYPE;
+           }
+    } catch (error) {
+       return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const excluirNotificacao = async function(id, contentType) {
+    let MESSAGES = JSON.parse(JSON.stringify(defaultMessages));
+
+  try {
+    if (!contentType || String(contentType).toUpperCase() == "APPLICATION/JSON") {
+      
+      if (!isNaN(id) && id > 0) {
+
+        let validarId = await buscarNotificacoesId(id);
+
+        if (validarId.status_code == 200) {
+          let result = await notificacaoDAO.setDeleteNotification(id)
+
+          if (result) {
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status;
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code;
+            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message;
+
+            return MESSAGES.DEFAULT_HEADER; 
+          } else {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL; 
+          }
+        } else {
+          return validarId; 
+        }
+
+      } else {
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += " [Id incorreto]";
+        return MESSAGES.ERROR_REQUIRED_FIELDS; 
+      }
+
+    } else {
+      return MESSAGES.ERROR_CONTENT_TYPE; 
+    }
+
+  } catch (error) {
+    return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER; 
+  }
+}
+
 const validarDadosNotificacao = async function (notificacao) {
     let MESSAGES = JSON.parse(JSON.stringify(defaultMessages));
 
@@ -86,5 +204,8 @@ const validarDadosNotificacao = async function (notificacao) {
 module.exports = {
     listarNotificacoes,
     buscarNotificacoesId,
+    inserirNotificacao,
+    atualizarNotificacao,
+    excluirNotificacao,
     validarDadosNotificacao
 }

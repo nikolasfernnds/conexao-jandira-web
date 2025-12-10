@@ -21,6 +21,19 @@ router.get('/:id', async(req, res) => {
     res.status(notificacao.status_code).json(notificacao)
 })
 
+router.post('/', async(req, res) => {
+    let notificacao = await controllerNotificacao.inserirNotificacao(req.body, req.headers['content-type'])
+    res.status(notificacao.status_code).json(notificacao)
+})
 
+router.put('/:id', async(req, res) => {
+    let notificacao = await controllerNotificacao.atualizarNotificacao(req.body, req.params.id, req.headers['content-type'])
+    res.status(notificacao.status_code).json(notificacao)
+})
+
+router.delete('/:id', async(req, res) => {
+    let notificacao = await controllerNotificacao.excluirNotificacao(req.params.id)
+    res.status(notificacao.status_code).json(notificacao)
+})
 
 module.exports = router
