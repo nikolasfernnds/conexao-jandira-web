@@ -46,7 +46,6 @@ const getSelectUserById = async function (id) {
         }
 
     } catch (error) {
-        console.log(error)
         return false
     }
 }
@@ -117,7 +116,6 @@ const setInsertNewUser = async function (user) {
         return true 
 
     } catch (error) {
-        console.log(error)
 
         return false
     }

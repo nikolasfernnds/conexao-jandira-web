@@ -117,7 +117,6 @@ async function carregarNoticias() {
     try {
         const resposta = await listarTodasNoticias()
         const todasNoticias = resposta.itens?.noticias || resposta.itens?.noticia || []
-        console.log(todasNoticias)
         if (!Array.isArray(todasNoticias)) throw new Error('Dados inválidos')
 
         if (todasNoticias.length === 0) {

@@ -142,7 +142,6 @@ if (btnSalvar) {
         const jsonUser = localStorage.getItem('user')
         const usuarioLogado = JSON.parse(jsonUser)
         const id = usuarioLogado.id_usuario 
-        console.log(id)
         const dadosAtualizados = {
             nome_completo: document.getElementById('input-nome').value,
             nickname: usuarioLogado.nickname,
@@ -175,7 +174,6 @@ if (btnSalvar) {
                 alert('Erro ao atualizar: ' + resultado.message)
             }
         } catch (error) {
-            console.error(error)
             alert('Erro de comunicação com o servidor.')
         }
     })
@@ -193,7 +191,6 @@ async function carregarDadosPerfil() {
     const id = usuarioLogado.id_usuario
 
     const resultado = await listarUsuario(id)
-    console.log(resultado)
 
     if (resultado.status) {
         const dados = resultado.itens

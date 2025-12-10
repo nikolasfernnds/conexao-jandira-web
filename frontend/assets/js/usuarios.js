@@ -62,7 +62,6 @@ export async function atualizarUsuario(id, dados) {
     }
 
     const response = await fetch(url, options)
-    console.log(response)
     return response.json()
 }
 

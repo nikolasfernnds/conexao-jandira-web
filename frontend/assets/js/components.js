@@ -156,11 +156,19 @@ function createHeader() {
     const profileImg = document.createElement('img')
     profileImg.classList.add('header-icon')
     profileImg.src = '../../assets/img/profile.svg'
+    profileImg.addEventListener('click', () => {
+        window.location.href = '../../pages/perfil/index.html'
+    })
+
 
     const gnnLogo = document.createElement('img')
     gnnLogo.classList.add('header-icon')
     gnnLogo.classList.add('logo-icon')
     gnnLogo.src = '../../assets/img/logoGNNJandira.png'
+    gnnLogo.addEventListener('click', () => {
+        window.location.href = '../../pages/perfil/index.html'
+    })
+
 
     const gnnContainer = document.createElement('div')
     gnnContainer.classList.add('gnn-container')
@@ -289,8 +297,6 @@ function createNotifyModal() {
     const userStorage = localStorage.getItem('user')
     if (userStorage)
         idUsuario = JSON.parse(userStorage).id_usuario
-
-    console.log(idUsuario)
 
     const main = document.getElementById('main')
 
