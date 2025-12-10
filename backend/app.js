@@ -39,6 +39,7 @@ const usuarioRoutes = require('./src/routes/usuario/usuarioRoutes.js')
 const enderecoUsuarioRoutes = require('./src/routes/enderecos/enderecoUsuarioRoutes.js')
 const ocorrenciaRoutes = require('./src/routes/ocorrencias/ocorrenciasRoutes.js')
 const noticiaRoutes = require('./src/routes/noticia/noticiaRoutes.js')
+const comentarioMultiRoutes = require('./src/routes/comentario/comentarioMultiRoutes.js');
 const notificacaoRoutes = require('./src/routes/notificacao/notificacaoRoutes.js')
 
 // --- Definição dos Endpoints com prefixo ---
@@ -47,6 +48,7 @@ app.use('/v1/gnn/usuarios', usuarioRoutes)
 app.use('/v1/gnn/endereco/usuario', enderecoUsuarioRoutes)
 app.use('/v1/gnn/ocorrencia', ocorrenciaRoutes)
 app.use('/v1/gnn/noticia', noticiaRoutes)
+app.use('/v1/gnn/comentario', comentarioMultiRoutes);
 app.use('/v1/gnn/notificacao', notificacaoRoutes)
 
 // --- Iniciar Servidor ---

@@ -36,6 +36,7 @@ const getSelectNoticiaById = async function(id) {
         else
             return false
     } catch (error) {
+        console.log(error)
         return false
     }
 }
