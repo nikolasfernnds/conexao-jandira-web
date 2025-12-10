@@ -87,13 +87,13 @@ const buscarNoticiaId = async function (id) {
 
     try {
         if (!isNaN(id) && id != null && id != "" && id > 0) {
-            let resultNoticias = await noticiaDAO.getSelectNoticiaById(Number(id));
+            let resultNoticias = await noticiaDAO.getSelectNoticiaById(Number(id))
 
             if (resultNoticias) {
                 if (resultNoticias.length > 0) {
                     MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_REQUEST.status;
                     MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_REQUEST.status_code;
-                    MESSAGES.DEFAULT_HEADER.itens.noticia = resultNoticias[0]; // Retorna apenas o objeto
+                    MESSAGES.DEFAULT_HEADER.itens.noticia = resultNoticias
 
                     return MESSAGES.DEFAULT_HEADER;
                 } else {
@@ -107,7 +107,7 @@ const buscarNoticiaId = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS;
         }
     } catch (error) {
-        console.error("Erro no Controller buscarNoticiaId:", error);
+        //console.error("Erro no Controller buscarNoticiaId:", error);
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;
     }
 }
