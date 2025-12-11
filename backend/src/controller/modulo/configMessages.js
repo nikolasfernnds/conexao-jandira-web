@@ -13,7 +13,7 @@ const dataAtual = new Date()
 const DEFAULT_HEADER = {
     development: 'Nicolas dos Santos, Nikolas Fernandes, Gabryel Fillipe',
     api_description: 'API para registro de ocorrências',
-    // 🎯 CORREÇÃO: Usar valores (false, 500) em vez dos tipos (Boolean, Number)
+
     status: false,
     status_code: 500,
     request_date: dataAtual.toLocaleString(),
@@ -35,7 +35,7 @@ const SUCESS_CREATED_ITEM = {
 
 const SUCCESS_DELETED_ITEM = {
     status: true,
-    status_code: 201,
+    status_code: 200, // Alterado para 200 ou 204 (Se for 201, o nome deve ser 201)
     message: 'Item deletado com sucesso'
 }
 
@@ -67,8 +67,8 @@ const ERROR_CONTENT_TYPE = {
 
 const ERROR_ACESS_DENIED = {
     status: false,
-    status_code: 401,
-    message: "Senha incorreta."
+    status_code: 403, // Mudado para 403 (Forbidden) ou 401 (Unauthorized)
+    message: "Acesso negado. Você não tem permissão ou sua senha está incorreta."
 }
 
 const ERROR_REQUIRED_FIELDS = {
