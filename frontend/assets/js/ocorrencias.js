@@ -2,6 +2,7 @@
 
 export async function listarOcorrencias() {
     const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia`
+    // const url = `http://localhost:8080/v1/gnn/ocorrencia`
     const response = await fetch(url)
     
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`) // Verifica se deu 404 ou 500
@@ -9,7 +10,8 @@ export async function listarOcorrencias() {
 }
 
 export async function listarOcorrenciaPeloId(id) {
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/${id}`
+   const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/${id}`
+    // const url = `http://localhost:8080/v1/gnn/ocorrencia/${id}`
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`)
@@ -18,6 +20,7 @@ export async function listarOcorrenciaPeloId(id) {
 
 export async function listarOcorrenciasDoUsuario(usuarioId) {
     const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/usuario/${usuarioId}`
+    // const url = `http://localhost:8080/v1/gnn/ocorrencia/usuario/${usuarioId}`
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`)
@@ -49,7 +52,8 @@ export async function criarOcorrencia(ocorrencia) {
 }
 
 export async function atualizarStatusOcorrencia(idOcorrencia, idStatus, idUsuario) {
-    const url = `http://localhost:8080/v1/gnn/ocorrencia/${idOcorrencia}/status`
+    // const url = `http://localhost:8080/v1/gnn/ocorrencia/${idOcorrencia}/status`
+    const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/${idOcorrencia}/status`
     
     const dados = {
         id_status: parseInt(idStatus),

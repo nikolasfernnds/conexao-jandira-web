@@ -126,8 +126,6 @@ function criarCardOcorrencia(ocorrencia) {
     card.id = `card-ocorrencia-${ocorrencia.id_ocorrencia}`
 
     card.addEventListener('click', () => abrirModalDetalhes(ocorrencia.id_ocorrencia))
-    console.log(ocorrencia)
-
     const divStatus = criarElemento('div', 'status-indicator')
     divStatus.classList.add(obterClasseStatus(ocorrencia.id_status))
 
@@ -268,6 +266,7 @@ async function abrirModalDetalhes(id) {
             if (btnSalvarAtual) {
                 const novoBotao = btnSalvarAtual.cloneNode(true)
                 btnSalvarAtual.parentNode.replaceChild(novoBotao, btnSalvarAtual)
+                
                 
                 novoBotao.addEventListener('click', () => salvarNovoStatus(id))
             }
