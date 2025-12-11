@@ -1,6 +1,6 @@
 'use strict'
 
-import { listarNotificacao, listarNotificacaoPeloId, listarNotificacoesDoUsuario } from "./notificacao.js"
+import { marcarNotificacaoComoLida, listarNotificacoesDoUsuario } from "./notificacao.js"
 
 const DEVELOPERS_DATA = [
     {
@@ -28,27 +28,6 @@ const LINKS = [
     { text: 'Ocorrências', href: '../../pages/ocorrencias/index.html' },
     { text: 'Perfil', href: '../../pages/perfil/index.html' },
     { text: 'Sair', href: '../../pages/login/index.html', style: 'color: var(--status-vermelho)' }
-]
-
-const MOCK_NOTIFICACOES = [
-    {
-        titulo: 'Status Atualizado',
-        mensagem: 'Sua ocorrência "Buraco na rua" mudou para "Em Análise".',
-        data: 'Hoje, 14:30',
-        lida: false
-    },
-    {
-        titulo: 'Comentário Respondido',
-        mensagem: 'A prefeitura respondeu ao seu comentário na ocorrência #123.',
-        data: 'Ontem',
-        lida: true
-    },
-    {
-        titulo: 'Ocorrência Finalizada',
-        mensagem: 'A lâmpada da praça foi trocada com sucesso.',
-        data: '05/12/2025',
-        lida: true
-    }
 ]
 
 function toggleNavbar() {
@@ -189,12 +168,29 @@ function createHeader() {
     const menuIcons = document.createElement('div')
     menuIcons.classList.add('menu-icons')
 
+    const notificationContainer = document.createElement('div')
+    notificationContainer.classList.add('notification-container')
+
     const notifyIcon = document.createElement('img')
     notifyIcon.classList.add('header-icon')
     notifyIcon.classList.add('notify-icon')
     notifyIcon.src = '../../assets/img/notificaçãoIcon.png'
+    notifyIcon.alt = 'Notificações'
 
-    notifyIcon.addEventListener('click', () => {
+    const badge = document.createElement('span')
+    badge.classList.add('notification-badge')
+    badge.style.display = 'none'
+
+    notificationContainer.appendChild(notifyIcon)
+    notificationContainer.appendChild(badge)
+
+    const userJson = localStorage.getItem('user')
+    if (userJson) {
+        const user = JSON.parse(userJson)
+        atualizarBadgeNotificacao(user.id_usuario, badge)
+    }
+
+    notificationContainer.addEventListener('click', () => {
         const modal = createNotifyModal()
         createModalArea(modal)
     })
@@ -213,7 +209,7 @@ function createHeader() {
 
     gnnContainer.appendChild(gnn)
 
-    menuIcons.appendChild(notifyIcon)
+    menuIcons.appendChild(notificationContainer)
     menuIcons.appendChild(menuImg)
 
     header.appendChild(perfilIcons)
@@ -325,6 +321,33 @@ function createNotificationItem(notificacao) {
         article.classList.add('nao-lida')
     }
 
+    article.addEventListener('click', async () => {
+        if (notificacao.lida) return
+
+        try {
+            await marcarNotificacaoComoLida(notificacao.id_notificacao_usuario)
+
+            article.classList.remove('nao-lida')
+            notificacao.lida = true
+
+            const badge = document.querySelector('.notification-badge')
+            if(badge) {
+                let count = parseInt(badge.textContent)
+                if (!isNaN(count)) {
+                    count--
+                    if (count <= 0) {
+                        badge.style.display = 'none'
+                    } else {
+                        badge.textContent = count > 9 ? '9+' : count
+                    }
+                }
+            }
+
+        } catch (erro) {
+            console.error('Erro ao marcar como lida:', erro)
+        }
+    })
+
     const content = document.createElement('div')
     content.classList.add('notificacao-content')
 
@@ -420,7 +443,7 @@ async function createModalArea(modal) {
 
         const msgErro = document.createElement('p')
         msgErro.textContent = 'Erro ao carregar.'
-        msgErro.style.color = 'var(--status-vermelho)' 
+        msgErro.style.color = 'var(--status-vermelho)'
         msgErro.style.padding = '20px'
         msgErro.style.textAlign = 'center'
 
@@ -431,6 +454,30 @@ async function createModalArea(modal) {
     containerNotify.appendChild(notificacoes)
 
     modal.appendChild(containerNotify)
+}
+
+async function atualizarBadgeNotificacao(idUsuario, badgeElement) {
+    try {
+        const dados = await listarNotificacoesDoUsuario(idUsuario)
+        
+        if (dados && dados.itens && dados.itens.notificacao) {
+            const lista = Array.isArray(dados.itens.notificacao) 
+                ? dados.itens.notificacao 
+                : [dados.itens.notificacao]
+
+            const naoLidas = lista.filter(n => !n.lida).length
+
+            if (naoLidas > 0) {
+                badgeElement.textContent = naoLidas > 9 ? '9+' : naoLidas
+                badgeElement.style.display = 'flex'
+            } else {
+                badgeElement.style.display = 'none'
+            }
+        }
+    } catch (error) {
+        console.log('Sem notificações ou erro ao contar')
+        badgeElement.style.display = 'none'
+    }
 }
 
 createHeader()

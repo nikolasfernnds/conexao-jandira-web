@@ -68,3 +68,18 @@ export async function atualizarNotificacao(idNotificacao, notificacao) {
     const dados = await response.json()
     return dados
 }
+
+export async function marcarNotificacaoComoLida(idNotificacaoUsuario) {
+    const url = `https://gnn-jandira.onrender.com/v1/gnn/notificacao-usuario/${idNotificacaoUsuario}/lida`
+
+    const options = {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const response = await fetch(url, options)
+    if(!response.ok) throw new Error(`Erro ao marcar como lida: ${response.status}`)
+    return response.json()
+}
