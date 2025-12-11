@@ -2,7 +2,7 @@
 
 export async function listarNotificacao() {
     
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/notificacao`
+    const url = `http://localhost:8080/v1/gnn/notificacao`
 
     const response = await fetch(url)
     if(!response.ok) throw new Error(`Erro na API: ${response.status}`)
@@ -13,7 +13,7 @@ export async function listarNotificacao() {
 
 export async function listarNotificacaoPeloId(id) {
     
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/notificacao/${id}`
+    const url = `http://localhost:8080/v1/gnn/notificacao/${id}`
 
     const response = await fetch(url)
     if(!response.ok) throw new Error(`Erro na API: ${response.status}`)
