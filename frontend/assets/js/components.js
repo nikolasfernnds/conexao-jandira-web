@@ -1,5 +1,7 @@
 'use strict'
 
+import { listarNotificacao, listarNotificacaoPeloId, listarNotificacoesDoUsuario } from "./notificacao.js"
+
 const DEVELOPERS_DATA = [
     {
         nome: 'Gabryel Fillipe',
@@ -128,6 +130,13 @@ function toggleNavbar() {
     document.body.appendChild(nav)
 }
 
+function formatarData(dataIso) {
+    if (!dataIso) return 'DATA INDISP.'
+    const data = new Date(dataIso)
+    if (isNaN(data.getTime())) return 'DATA INVÁLIDA'
+    return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 function createLink(href, iconSrc, text) {
     const link = document.createElement('a')
     link.classList.add('dev-links')
@@ -156,11 +165,19 @@ function createHeader() {
     const profileImg = document.createElement('img')
     profileImg.classList.add('header-icon')
     profileImg.src = '../../assets/img/profile.svg'
+    profileImg.addEventListener('click', () => {
+        window.location.href = '../../pages/perfil/index.html'
+    })
+
 
     const gnnLogo = document.createElement('img')
     gnnLogo.classList.add('header-icon')
     gnnLogo.classList.add('logo-icon')
     gnnLogo.src = '../../assets/img/logoGNNJandira.png'
+    gnnLogo.addEventListener('click', () => {
+        window.location.href = '../../pages/home/index.html'
+    })
+
 
     const gnnContainer = document.createElement('div')
     gnnContainer.classList.add('gnn-container')
@@ -180,17 +197,6 @@ function createHeader() {
     notifyIcon.addEventListener('click', () => {
         const modal = createNotifyModal()
         createModalArea(modal)
-
-        const buttonCloseModal = document.getElementById('btn-fechar-modal-notificacao')
-        buttonCloseModal.addEventListener('click', () => {
-
-            const overlay = document.getElementById('modal-notify-overlay')
-            if (overlay) {
-                overlay.remove()
-            }
-
-        })
-
     })
 
     const menuImg = document.createElement('img')
@@ -290,13 +296,17 @@ function createNotifyModal() {
     if (userStorage)
         idUsuario = JSON.parse(userStorage).id_usuario
 
-    console.log(idUsuario)
-
     const main = document.getElementById('main')
 
     const modalNotifyOverlay = document.createElement('div')
     modalNotifyOverlay.classList.add('modal-notify-overlay')
     modalNotifyOverlay.id = 'modal-notify-overlay'
+
+    modalNotifyOverlay.addEventListener('click', (e) => {
+        if (e.target === modalNotifyOverlay) {
+            modalNotifyOverlay.remove()
+        }
+    })
 
     const modalNotify = document.createElement('div')
     modalNotify.classList.add('modal-notificacao')
@@ -310,7 +320,7 @@ function createNotifyModal() {
 function createNotificationItem(notificacao) {
     const article = document.createElement('article')
     article.classList.add('card-notificacao')
-    
+
     if (!notificacao.lida) {
         article.classList.add('nao-lida')
     }
@@ -323,18 +333,18 @@ function createNotificationItem(notificacao) {
 
     const title = document.createElement('h3')
     title.classList.add('notificacao-titulo')
-    title.textContent = notificacao.titulo
+    title.textContent = 'Nova Notificação'
 
     const date = document.createElement('span')
     date.classList.add('notificacao-data')
-    date.textContent = notificacao.data
+    date.textContent = formatarData(notificacao.data_envio)
 
     headerNote.appendChild(title)
     headerNote.appendChild(date)
 
     const message = document.createElement('p')
     message.classList.add('notificacao-mensagem')
-    message.textContent = notificacao.mensagem
+    message.textContent = notificacao.conteudo
 
     content.appendChild(headerNote)
     content.appendChild(message)
@@ -343,7 +353,7 @@ function createNotificationItem(notificacao) {
     return article
 }
 
-function createModalArea(modal) {
+async function createModalArea(modal) {
 
     const containerNotify = document.createElement('div')
     containerNotify.classList.add('container-notificacao')
@@ -358,22 +368,68 @@ function createModalArea(modal) {
     buttonClose.classList.add('btn-close')
     buttonClose.id = 'btn-fechar-modal-notificacao'
     buttonClose.textContent = '✖'
-    
+
+    buttonClose.addEventListener('click', () => {
+        const overlay = document.getElementById('modal-notify-overlay')
+        if (overlay) {
+            overlay.remove()
+        }
+    })
+
     headerContainer.appendChild(headerNotify)
     headerContainer.appendChild(buttonClose)
 
     const notificacoes = document.createElement('div')
     notificacoes.classList.add('notificacoes')
 
-    MOCK_NOTIFICACOES.forEach(note => {
-        const card = createNotificationItem(note)
-        card.classList.add('carti-notificacao')
-        notificacoes.appendChild(card)
-    })
+    try {
+        const userStorage = localStorage.getItem('user')
+        const usuario = userStorage ? JSON.parse(userStorage) : null
+
+        if (!usuario || !usuario.id_usuario) {
+            const msgLogin = document.createElement('p')
+            msgLogin.textContent = 'Faça login para ver suas notificações.'
+            msgLogin.style.color = '#ccc'
+            msgLogin.style.padding = '20px'
+            msgLogin.style.textAlign = 'center'
+
+            notificacoes.appendChild(msgLogin)
+        } else {
+            const resposta = await listarNotificacoesDoUsuario(usuario.id_usuario)
+
+            const lista = resposta.itens?.notificacao || resposta.notificacao || []
+            console.log(lista)
+
+            if (lista.length === 0) {
+                const msgVazia = document.createElement('p')
+                msgVazia.textContent = 'Nenhuma notificação nova.'
+                msgVazia.style.color = '#ccc'
+                msgVazia.style.padding = '20px'
+                msgVazia.style.textAlign = 'center'
+
+                notificacoes.appendChild(msgVazia)
+            } else {
+                lista.forEach(notificacao => {
+                    const card = createNotificationItem(notificacao)
+                    notificacoes.appendChild(card)
+                })
+            }
+        }
+    } catch (error) {
+        console.error("Erro ao carregar notificações", error)
+
+        const msgErro = document.createElement('p')
+        msgErro.textContent = 'Erro ao carregar.'
+        msgErro.style.color = 'var(--status-vermelho)' 
+        msgErro.style.padding = '20px'
+        msgErro.style.textAlign = 'center'
+
+        notificacoes.appendChild(msgErro)
+    }
 
     containerNotify.appendChild(headerContainer)
     containerNotify.appendChild(notificacoes)
-    
+
     modal.appendChild(containerNotify)
 }
 

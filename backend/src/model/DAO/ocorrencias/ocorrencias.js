@@ -10,7 +10,7 @@ const prisma = new PrismaClient()
 
 const getSelectAllOccurrences = async function() {
     try {
-        let sql = `SELECT * FROM tbl_ocorrencia`
+        let sql = `SELECT * FROM view_ocorrencias`
         let result = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(result))
@@ -25,7 +25,7 @@ const getSelectAllOccurrences = async function() {
 
 const getSelectOccurencesById = async function(id) {
     try {
-        let sql = `SELECT * FROM tbl_ocorrencia WHERE id_ocorrencia = ${id}`
+        let sql = `SELECT * FROM view_ocorrencias WHERE id_ocorrencia = ${id}`
         let result = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(result))
@@ -39,7 +39,7 @@ const getSelectOccurencesById = async function(id) {
 
 const getSelectOccurencesByCategory = async function(id) {
     try {
-        let sql = `SELECT * FROM tbl_ocorrencia WHERE id_categoria_ocorrencia = ${id}`
+        let sql = `SELECT * FROM view_ocorrencias WHERE id_categoria_ocorrencia = ${id}`
         let result = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(result))
@@ -53,7 +53,7 @@ const getSelectOccurencesByCategory = async function(id) {
 
 const getSelectOccurencesByUser = async function(id) {
     try {
-        let sql = `SELECT * FROM tbl_ocorrencia WHERE id_usuario = ${id}`
+        let sql = `SELECT * FROM view_ocorrencias WHERE id_usuario = ${id}`
         let result = await prisma.$queryRawUnsafe(sql)
 
         if(Array.isArray(result))

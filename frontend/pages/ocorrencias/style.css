@@ -94,12 +94,12 @@ main {
     scrollbar-width: none;
 }
 
-.lista-minhas-ocorrencias{
+.lista-minhas-ocorrencias {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    scrollbar-width: none;    
+    scrollbar-width: none;
 }
 
 .hidden {
@@ -421,7 +421,7 @@ main {
 
 
 
-.tab-btn{
+.tab-btn {
     background-color: transparent;
     border: var(--default-border);
     border-radius: var(--radius-sm);
@@ -431,7 +431,7 @@ main {
     margin-bottom: 8px;
 }
 
-.lista-comentarios{
+.lista-comentarios {
     background-color: var(--primary-color);
     display: flex;
     flex-direction: column;
@@ -445,27 +445,27 @@ main {
     border: var(--default-border);
 }
 
-.comentario{
+.comentario {
     display: flex;
     justify-content: space-around;
 }
 
-.comentario-usuario{
+.comentario-usuario {
     font-size: 12px;
     color: var(--amarelo-favo);
     text-align: left;
 }
 
-.comentario-texto{
+.comentario-texto {
     font-size: 12px;
 }
 
-.comentario-data{
+.comentario-data {
     font-size: 12px;
     color: var(--text-gray);
 }
 
-.input-comentario{
+.input-comentario {
     margin-top: 16px;
     width: 100%;
     border-radius: var(--radius-md);
@@ -477,82 +477,92 @@ main {
     color: var(--text-white);
 }
 
-.input-comentario::placeholder{
+.input-comentario::placeholder {
     color: var(--text-white);
 }
 
+.painel-gestao {
+    background-color: var(--preto-transparente);
+    padding: 12px;
+    border-radius: 8px;
+    border: var(--default-border);
+    margin-bottom: 16px;
+    margin-top: 16px;
+}
 
-@media (min-width:768px) {
+.label-detalhe{
+    color: var(--amarelo-ouro);
+}
 
-    .lista-ocorrencias {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        width: 90%;
-        gap: 16px;
-        margin-top: 24px;
-        overflow-y: auto;
-        max-height: 50dvh;
-    }
+.gestao-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
 
-    .lista-ocorrencias h2 {
-        grid-column: 1 / -1;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 16px;
-    }
+.input-padrao-gestao {
+    flex: 1;
+    background-color: var(--preto-transparente);
+    border: 1px solid var(--text-gray);
+    color: var(--text-white);
+    padding: 8px;
+    border-radius: 4px;
+}
 
-    .hidden {
-        display: none;
-    }
+.input-padrao-gestao option {
+    background-color: var(--bg-modal);
+    color: var(--text-white); 
+    padding: 10px;
+}
 
-    .modal-overlay {
-        top: 6%;
-        height: 80%;
-        width: 100%;
-    }
+.input-padrao-gestao option:checked,
+.input-padrao-gestao option:hover {
+    background-color: var(--amarelo-favo);
+    color: var(--text-black);
+}
 
-    .modal-box {
-        width: 800px;
-        max-width: 90%;
-        text-align: left;
-    }
+.btn-gestao {
+    background-color: var(--amarelo-favo);
+    color: var(--text-black);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-    .modal-form {
-        display: grid;
-        grid-template-columns: 1fr 1.5fr;
-        gap: 32px;
-        align-items: start;
-    }
+.btn-gestao:hover {
+    filter: brightness(0.9);
+}
 
-    .coluna-foto .preview {
-        height: 300px;
-        width: 100%;
-        margin-bottom: 0;
-        text-align: center;
-        display: flex;
-    }
-
-    .preview-label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .coluna-campos {
-        display: flex;
+@media (max-width: 480px) {
+    .btn-container {
         flex-direction: column;
+        height: auto;
         gap: 8px;
     }
 
-    .form-footer {
-        flex-direction: column;
-        justify-content: space-between;
+    .btn-tab {
+        width: 100%;
+        font-size: 11px;
+        padding-block: 8px;
     }
 
-    .checkbox-container {
-        display: flex;
-        justify-content: end;
+    .btn-nova-ocorrencia {
+        width: 100%;
+        text-align: center;
     }
 
+    .lista-ocorrencias {
+        width: 95%;
+        max-height: 60vh;
+    }
 
+    .card-title {
+        font-size: 14px;
+    }
+
+    .card-header {
+        font-size: 10px;
+    }
 }
