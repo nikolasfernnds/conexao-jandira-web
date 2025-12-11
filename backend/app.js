@@ -5,53 +5,55 @@
  * Versão: 1.0
  ******************************************************************************************************************/
 
-// Importando dependencias da API
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-// Retorna a porta do servidor atual ou coloca uma porta local
 const PORT = process.env.PORT || 8080
 
-// Criando uma Instancia de uma classe do express
 const app = express()
 
-// Configuração de permissões e CORS
 app.use((request, response, next) => {
-    // Permite que qualquer origem acesse a API
     response.header('Access-Control-Allow-Origin', '*')
     // Define os verbos HTTP permitidos
-    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
     
     response.header('Access-Control-Allow-Headers', 'Content-Type') // Adicione isso
 
     // Carrega as configurações no CORS da API
     app.use(cors())
     
-    next() // Próximo, carregar os proximos endPoints
+    next() 
 })
 
-// Configura o body-parser para receber JSON
 app.use(bodyParser.json())
 
-// --- Importação dos Arquivos de Rota ---
 const usuarioRoutes = require('./src/routes/usuario/usuarioRoutes.js')
 const enderecoUsuarioRoutes = require('./src/routes/enderecos/enderecoUsuarioRoutes.js')
 const ocorrenciaRoutes = require('./src/routes/ocorrencias/ocorrenciasRoutes.js')
 const noticiaRoutes = require('./src/routes/noticia/noticiaRoutes.js')
+<<<<<<< HEAD
 const routesNoticiaComentarios = require('./src/routes/comentario/routesNoticiaComentarios.js')
 const routesOcorrenciaComentarios = require('./src/routes/comentario/routesOcorrenciaComentarios.js')
+=======
+const comentarioMultiRoutes = require('./src/routes/comentario/comentarioMultiRoutes.js');
+const notificacaoRoutes = require('./src/routes/notificacao/notificacaoRoutes.js')
+const notificacaoUsuarioRoutes = require('./src/routes/notificacao_usuario/notificacaoUsuarioRoutes.js')
+>>>>>>> 6afee2124cb5a0c0fe9780a8d9f6acb6928b6de1
 
-// --- Definição dos Endpoints com prefixo ---
-// Define que todos os endpoints de usuários terão o prefixo '/v1/gnn'
 app.use('/v1/gnn/usuarios', usuarioRoutes)
 app.use('/v1/gnn/endereco/usuario', enderecoUsuarioRoutes)
 app.use('/v1/gnn/ocorrencia', ocorrenciaRoutes)
 app.use('/v1/gnn/noticia', noticiaRoutes)
+<<<<<<< HEAD
 app.use('/v1/gnn/noticia', routesNoticiaComentarios)
 app.use('/v1/gnn/ocorrencia', routesOcorrenciaComentarios)
+=======
+app.use('/v1/gnn/comentario', comentarioMultiRoutes)
+app.use('/v1/gnn/notificacao', notificacaoRoutes)
+app.use('/v1/gnn/notificacao-usuario', notificacaoUsuarioRoutes)
+>>>>>>> 6afee2124cb5a0c0fe9780a8d9f6acb6928b6de1
 
-// --- Iniciar Servidor ---
 app.listen(PORT, function () {
     console.log('API GNN Jandira aguardando requisições na porta ' + PORT)
 })

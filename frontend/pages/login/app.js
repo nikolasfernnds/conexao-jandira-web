@@ -178,7 +178,7 @@ document.addEventListener('click', async function (e) {
 
         if (resultado.status) {
         localStorage.setItem('user', JSON.stringify(resultado.itens))
-        window.location.href = ('../home/index.html')
+        window.location.href = ('./index.html')
     } else {
         alert(resultado.message || 'Erro ao entrar')
     }
