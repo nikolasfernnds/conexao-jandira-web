@@ -287,7 +287,7 @@ const validarDadosOcorrencia = async function (ocorrencia) {
     }
     
     return false; 
-};
+}
 
 module.exports = {
     listarTodasOcorrencias,
