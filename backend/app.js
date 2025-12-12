@@ -33,10 +33,14 @@ const enderecoUsuarioRoutes = require('./src/routes/enderecos/enderecoUsuarioRou
 const ocorrenciaRoutes = require('./src/routes/ocorrencias/ocorrenciasRoutes.js')
 const noticiaRoutes = require('./src/routes/noticia/noticiaRoutes.js')
 <<<<<<< HEAD
+<<<<<<< HEAD
 const routesNoticiaComentarios = require('./src/routes/comentario/routesNoticiaComentarios.js')
 const routesOcorrenciaComentarios = require('./src/routes/comentario/routesOcorrenciaComentarios.js')
 =======
 const comentarioMultiRoutes = require('./src/routes/comentario/comentarioMultiRoutes.js');
+=======
+const comentarioRoutes = require('./src/routes/comentario/comentarioRoutes.js')
+>>>>>>> 6a2f428f30a4cbece7465503a3e18cd55c468dcd
 const notificacaoRoutes = require('./src/routes/notificacao/notificacaoRoutes.js')
 const notificacaoUsuarioRoutes = require('./src/routes/notificacao_usuario/notificacaoUsuarioRoutes.js')
 >>>>>>> 6afee2124cb5a0c0fe9780a8d9f6acb6928b6de1
@@ -46,6 +50,7 @@ app.use('/v1/gnn/endereco/usuario', enderecoUsuarioRoutes)
 app.use('/v1/gnn/ocorrencia', ocorrenciaRoutes)
 app.use('/v1/gnn/noticia', noticiaRoutes)
 <<<<<<< HEAD
+<<<<<<< HEAD
 app.use('/v1/gnn/noticia', routesNoticiaComentarios)
 app.use('/v1/gnn/ocorrencia', routesOcorrenciaComentarios)
 =======
@@ -53,6 +58,11 @@ app.use('/v1/gnn/comentario', comentarioMultiRoutes)
 app.use('/v1/gnn/notificacao', notificacaoRoutes)
 app.use('/v1/gnn/notificacao-usuario', notificacaoUsuarioRoutes)
 >>>>>>> 6afee2124cb5a0c0fe9780a8d9f6acb6928b6de1
+=======
+app.use('/v1/gnn/notificacao', notificacaoRoutes)
+app.use('/v1/gnn/notificacao-usuario', notificacaoUsuarioRoutes)
+app.use('/v1/gnn/comentario', comentarioRoutes)
+>>>>>>> 6a2f428f30a4cbece7465503a3e18cd55c468dcd
 
 app.listen(PORT, function () {
     console.log('API GNN Jandira aguardando requisições na porta ' + PORT)

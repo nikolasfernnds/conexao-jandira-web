@@ -22,6 +22,19 @@ export async function listarNotificacaoPeloId(id) {
     return dados
 }
 
+export async function listarNotificacoesDoUsuario(idUsuario) {
+    const url = `https://gnn-jandira.onrender.com/v1/gnn/notificacao-usuario/usuario/${idUsuario}`
+
+    try {
+        const response = await fetch(url)
+        if(!response.ok) throw new Error(`Erro na API: ${response.status}`)
+        return await response.json()
+    } catch (error) {
+        console.error('Erro ao buscar notificações do usuário:', error)
+        return false
+    }
+}
+
 export async function criarNotificacao(notificacao) {
 
     const url = `https://gnn-jandira.onrender.com/v1/gnn/notificacao`
@@ -54,4 +67,19 @@ export async function atualizarNotificacao(idNotificacao, notificacao) {
     if(!response.ok) throw new Error(`Erro na API: ${response.status}`)
     const dados = await response.json()
     return dados
+}
+
+export async function marcarNotificacaoComoLida(idNotificacaoUsuario) {
+    const url = `https://gnn-jandira.onrender.com/v1/gnn/notificacao-usuario/${idNotificacaoUsuario}/lida`
+
+    const options = {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const response = await fetch(url, options)
+    if(!response.ok) throw new Error(`Erro ao marcar como lida: ${response.status}`)
+    return response.json()
 }

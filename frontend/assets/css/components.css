@@ -243,7 +243,7 @@ header img {
 
 .modal-notificacao{
     width: 90%;
-    height: auto;
+    min-height: 50dvh;
     background-color: var(--bg-modal);
     padding-inline: var(--padding-md);
     padding-block: var(--padding-md);
@@ -274,7 +274,7 @@ header img {
     max-height: 65dvh;
 }
 
-.card-notificacao{
+.card-notificacao {
     background-color: var(--preto-transparente);
     border: var(--default-border);
     border-radius: var(--radius-md);
@@ -283,11 +283,40 @@ header img {
     padding-block: 4px;
     display: flex;
     gap: 8px;
+    cursor: pointer; 
+    transition: all 0.2s ease-in-out;
+    position: relative; 
+    top: 0;
 }
 
-.card-notificacao.nao-lida{
+.card-notificacao.nao-lida {
     border-left: 4px solid var(--amarelo-favo); 
     background-color: rgba(255, 255, 255, 0.05);
+}
+
+.card-notificacao:hover {
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-color: var(--text-gray); 
+    transform: translateY(-3px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+}
+
+.card-notificacao.nao-lida:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+    border-left-color: var(--amarelo-ouro); 
+}
+
+.card-notificacao:active {
+    transform: scale(0.98); 
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.card-notificacao.nao-lida h3{
+    background-color: rgba(255, 255, 255, 0.05);
+    padding-inline: 2px;
+    padding-block: 2px;
+    color: var(--amarelo-ouro);
 }
 
 .notificacao-header{
@@ -308,10 +337,47 @@ header img {
     color: var(--text-gray);
 }
 
+.notification-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; 
+}
+
 .notificacao-mensagem {
     font-size: 16px;
     color: var(--text-gray);
     line-height: 1.4;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ff3b30; 
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--header-color); 
+    z-index: 10;
+    transition: transform 0.2s ease;
+}
+
+.notification-badge.pulse {
+    animation: pulse-animation 0.5s ease-in-out;
+}
+
+@keyframes pulse-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 
 @media (min-width: 768px) {
