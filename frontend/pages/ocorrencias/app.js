@@ -18,6 +18,7 @@ const containerListaMinhas = document.getElementById('container-lista-minhas')
 const btnFiltroTodas = document.getElementById('btn-filtro-todas')
 const btnFiltroAtivas = document.getElementById('btn-filtro-ativas')
 const btnFiltroEncerradas = document.getElementById('btn-filtro-encerradas')
+const btnRegistrar = document.getElementById('btn-registrar')
 
 const entradaCep = document.getElementById('input-cep')
 const entradaLogradouro = document.getElementById('input-logradouro')
@@ -126,8 +127,25 @@ function criarCardOcorrencia(ocorrencia) {
     card.id = `card-ocorrencia-${ocorrencia.id_ocorrencia}`
 
     card.addEventListener('click', () => abrirModalDetalhes(ocorrencia.id_ocorrencia))
-    const divStatus = criarElemento('div', 'status-indicator')
-    divStatus.classList.add(obterClasseStatus(ocorrencia.id_status))
+
+    const divImg = criarElemento('div', 'card-img-wrapper')
+    const img = document.createElement('img')
+    
+    if (ocorrencia.foto_ocorrencia) {
+        img.src = ocorrencia.foto_ocorrencia
+    } else {
+        img.src = '../../assets/img/imagem-generica.svg'
+    }
+    
+    img.alt = ocorrencia.titulo
+    img.classList.add('card-img-feed')
+    
+    const spanStatus = criarElemento('span', 'card-status-badge')
+    spanStatus.classList.add(obterClasseStatus(ocorrencia.id_status))
+    spanStatus.textContent = obterTextoStatus(ocorrencia.id_status)
+
+    divImg.appendChild(img)
+    divImg.appendChild(spanStatus)
 
     const divContent = criarElemento('div', 'card-content')
 
@@ -140,7 +158,8 @@ function criarCardOcorrencia(ocorrencia) {
     const pLocation = criarElemento('p', 'card-location', ocorrencia.bairro || ocorrencia.cidade || 'Localização não informada')
 
     divContent.append(divHeader, h3Title, pLocation)
-    card.append(divStatus, divContent)
+    
+    card.append(divImg, divContent)
 
     return card
 }
@@ -232,7 +251,7 @@ async function abrirModalDetalhes(id) {
         detalheTitulo.textContent = dados.titulo
         detalheDescricao.textContent = dados.descricao
         detalheData.textContent = formatarData(dados.data_registro)
-        
+
         detalheStatus.textContent = obterTextoStatus(dados.id_status)
         detalheStatus.className = 'tag-status'
         detalheStatus.classList.add(obterClasseStatus(dados.id_status))
@@ -253,24 +272,24 @@ async function abrirModalDetalhes(id) {
         }
 
         const user = JSON.parse(localStorage.getItem('user') || '{}')
-        const painelGestao = document.getElementById('painel-gestao') 
-        
+        const painelGestao = document.getElementById('painel-gestao')
+
         if (user.perfil === 'admin') {
             painelGestao.classList.remove('hidden')
-            
+
             const selectNovoStatus = document.getElementById('select-novo-status')
             selectNovoStatus.value = dados.id_status
-            
+
             const btnSalvarAtual = document.getElementById('btn-atualizar-status')
-            
+
             if (btnSalvarAtual) {
                 const novoBotao = btnSalvarAtual.cloneNode(true)
                 btnSalvarAtual.parentNode.replaceChild(novoBotao, btnSalvarAtual)
-                
-                
+
+
                 novoBotao.addEventListener('click', () => salvarNovoStatus(id))
             }
-            
+
         } else {
             painelGestao.classList.add('hidden')
         }
@@ -358,12 +377,12 @@ async function buscarCepAoSairDoFoco() {
 
 async function salvarNovoStatus(idOcorrencia) {
     const selectNovoStatus = document.getElementById('select-novo-status')
-    const btnSalvar = document.getElementById('btn-atualizar-status') 
-    
+    const btnSalvar = document.getElementById('btn-atualizar-status')
+
     if (!selectNovoStatus) return
 
     const novoStatusId = selectNovoStatus.value
-    
+
     const mapaStatus = {
         '1': { texto: 'Pendente', classe: 'status-pendente', cor: 'var(--status-vermelho)' },
         '2': { texto: 'Em Análise', classe: 'status-em-analise', cor: 'var(--status-amarelo)' },
@@ -371,7 +390,7 @@ async function salvarNovoStatus(idOcorrencia) {
     }
 
     const userStorage = localStorage.getItem('user')
-    const idUsuarioLogado = userStorage ? JSON.parse(userStorage).id_usuario : 1 
+    const idUsuarioLogado = userStorage ? JSON.parse(userStorage).id_usuario : 1
 
     if (btnSalvar) {
         btnSalvar.textContent = 'Salvando...'
@@ -381,10 +400,10 @@ async function salvarNovoStatus(idOcorrencia) {
     try {
         const resultado = await atualizarStatusOcorrencia(idOcorrencia, novoStatusId, idUsuarioLogado)
 
-        if (resultado) { 
+        if (resultado) {
             alert('Status atualizado com sucesso!')
-            
-            
+
+
             const infoStatus = mapaStatus[novoStatusId]
             if (detalheStatus && infoStatus) {
                 detalheStatus.textContent = infoStatus.texto
@@ -393,16 +412,16 @@ async function salvarNovoStatus(idOcorrencia) {
             }
 
             const cardNaLista = document.getElementById(`card-ocorrencia-${idOcorrencia}`)
-            
+
             if (cardNaLista) {
                 const statusDoCard = cardNaLista.querySelector('.status-indicator') || cardNaLista.querySelector('.tag-status')
 
                 if (statusDoCard) {
                     statusDoCard.textContent = infoStatus.texto
-                    
+
                     statusDoCard.classList.remove('status-pendente', 'status-em-analise', 'status-resolvido')
                     statusDoCard.classList.add(infoStatus.classe)
-                    
+
                     statusDoCard.style.backgroundColor = infoStatus.cor
                 }
             }
@@ -410,7 +429,7 @@ async function salvarNovoStatus(idOcorrencia) {
             if (typeof carregarFeed === 'function') carregarFeed()
             if (typeof carregarMinhasOcorrencias === 'function') carregarMinhasOcorrencias()
 
-             fecharModalDetalhes() 
+            fecharModalDetalhes()
 
         } else {
             alert('Erro ao atualizar status na API.')
@@ -473,5 +492,87 @@ if (btnFiltroEncerradas) btnFiltroEncerradas.addEventListener('click', () => fil
 
 if (tabHistorico) tabHistorico.addEventListener('click', ativarAbaHistorico)
 if (tabComentarios) tabComentarios.addEventListener('click', ativarAbaComentarios)
+
+if (btnRegistrar) {
+    btnRegistrar.addEventListener('click', async (e) => {
+
+        e.preventDefault()
+
+        const inputTitulo = document.getElementById('input-titulo')
+        const selectTipo = document.getElementById('input-tipo')
+        const inputCep = document.getElementById('input-cep')
+        const inputLogradouro = document.getElementById('input-logradouro')
+        const inputNumero = document.getElementById('input-numero')
+        const inputBairro = document.getElementById('input-bairro')
+        const inputCidade = document.getElementById('input-cidade')
+        const inputReferencia = document.getElementById('input-referencia')
+        const selectUrgencia = document.getElementById('input-urgencia')
+        const fileInput = document.getElementById('file-input')
+
+        const titulo = document.getElementById('input-titulo').value
+        const descricao = document.getElementById('input-tipo').value
+
+        if (!titulo) {
+            alert("Preencha o título!")
+            return
+        }
+
+        let idUsuario = null
+        try {
+            const userStorage = localStorage.getItem('user')
+            if (userStorage) idUsuario = JSON.parse(userStorage).id_usuario
+        } catch (err) { console.error('Erro ao ler usuário', err) }
+
+        const formData = new FormData()
+
+        formData.append('id_usuario', idUsuario || 1) 
+        formData.append('titulo', inputTitulo.value)
+        formData.append('descricao', inputTitulo.value)
+
+        const categoriaId = mapaCategorias[selectTipo.value] || 1
+        formData.append('id_categoria_ocorrencia', categoriaId)
+
+        formData.append('nivel_ocorrencia', selectUrgencia.value || 'media')
+
+        formData.append('cep', inputCep.value || '')
+        formData.append('logradouro', inputLogradouro.value)
+        formData.append('numero', inputNumero.value || 'S/N')
+        formData.append('bairro', inputBairro.value || '')
+        formData.append('ponto_referencia', inputReferencia.value || '')
+
+        if (fileInput && fileInput.files.length > 0) {
+            formData.append('foto', fileInput.files[0])
+        }
+
+        const textoOriginal = btnRegistrar.textContent
+        btnRegistrar.textContent = 'Enviando...'
+        btnRegistrar.disabled = true
+
+        try {
+            const resultado = await criarOcorrencia(formData)
+
+            if (resultado) {
+                alert('Ocorrência registrada com sucesso!')
+                fecharModalRegistrar() 
+
+                inputTitulo.value = ''
+                fileInput.value = ''
+                document.getElementById('image-preview').classList.add('hidden')
+                document.getElementById('preview-label').style.display = 'flex'
+
+                if (typeof carregarFeed === 'function') carregarFeed()
+                if (typeof carregarMinhasOcorrencias === 'function') carregarMinhasOcorrencias()
+            } else {
+                alert('Erro ao registrar ocorrência. Verifique os dados.')
+            }
+        } catch (error) {
+            console.error(error)
+            alert('Erro de conexão ao criar ocorrência.')
+        } finally {
+            btnRegistrar.textContent = textoOriginal
+            btnRegistrar.disabled = false
+        }
+    })
+}
 
 document.addEventListener('DOMContentLoaded', carregarFeed)

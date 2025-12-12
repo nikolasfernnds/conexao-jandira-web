@@ -8,6 +8,7 @@
 const usuarioDao = require('../../model/DAO/usuario/usuario.js')
 const DEFAULT_MESSAGES = require('../modulo/configMessages.js')
 const bcrypt = require('bcrypt')
+const cloudinary = require('../../services/cloudinary.js')
 
 const listarUsuarios = async function () {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -176,55 +177,75 @@ const buscarUsuario = async function (id) {
         }
 
     } catch (error) {
-        console.log(error)
+
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
-const atualizarUsuario = async function (id, contentType, usuario) {
+const atualizarUsuario = async function (id, contentType, usuario, arquivo) {
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (String(contentType).toLowerCase() !== 'application/json') {
-            return MESSAGES.ERROR_CONTENT_TYPE
-        }
+        if (String(contentType).toLowerCase().includes('multipart/form-data') || String(contentType).toLowerCase() === 'application/json') {
 
-        if (id == '' || id == undefined || isNaN(id)) {
-            return MESSAGES.ERROR_INVALID_ID
-        }
-
-        let validar = validarDadosUsuario(usuario, true)
-
-        if (validar === false) {
-
-            if (usuario.senha && usuario.senha !== '') {
-                let senhaHash = await bcrypt.hash(usuario.senha, 10)
-                usuario.senha_hash = senhaHash
-                delete usuario.senha
-                delete usuario.confirmar_senha
+            if (id == '' || id == undefined || isNaN(id)) {
+                return MESSAGES.ERROR_INVALID_ID
             }
 
-            let usuarioJson = JSON.stringify(usuario)
+            if (arquivo) {
+                const urlFoto = await cloudinary.uploadImage(arquivo)
+                usuario.foto_perfil = urlFoto
+            }
 
-            let result = await usuarioDao.setUpdateUser(id, usuarioJson)
+            if (!usuario.endereco && (usuario.cep || usuario.logradouro)) {
+                usuario.endereco = {
+                    cep: usuario.cep,
+                    logradouro: usuario.logradouro,
+                    numero: usuario.numero,
+                    bairro: usuario.bairro,
+                    cidade: usuario.cidade,
+                    uf: usuario.uf,
+                    complemento: usuario.complemento
+                }
+            }
 
-            if (result) {
-                MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_REQUEST.status
-                MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_REQUEST.status_code
-                MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCESS_REQUEST.message
-                MESSAGES.DEFAULT_HEADER.itens = usuario
+            // Validação
+            let validar = validarDadosUsuario(usuario, true)
 
-                return MESSAGES.DEFAULT_HEADER
+            if (validar === false) {
+
+                if (usuario.senha && usuario.senha !== '') {
+                    let senhaHash = await bcrypt.hash(usuario.senha, 10)
+                    usuario.senha_hash = senhaHash
+                    delete usuario.senha
+                    delete usuario.confirmar_senha
+                }
+
+                let usuarioJson = JSON.stringify(usuario)
+
+                let result = await usuarioDao.setUpdateUser(id, usuarioJson)
+
+                if (result) {
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_REQUEST.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_REQUEST.status_code
+                    MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCESS_REQUEST.message
+                    MESSAGES.DEFAULT_HEADER.itens = usuario
+                    return MESSAGES.DEFAULT_HEADER
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                }
+
             } else {
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                return validar
             }
 
         } else {
-            return validar
+            return MESSAGES.ERROR_CONTENT_TYPE
         }
 
     } catch (error) {
+
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

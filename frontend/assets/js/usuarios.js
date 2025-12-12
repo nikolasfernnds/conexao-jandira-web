@@ -50,18 +50,21 @@ export async function listarUsuario(id) {
 }
 
 export async function atualizarUsuario(id, dados) {
-    // const url = `http://localhost:8080/v1/gnn/usuarios/${id}`
-    const url = `https://corsproxy.io/?url=https://gnn-jandira.onrender.com/v1/gnn/usuarios/${id}`
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/usuarios/${id}`
+    const url = `http://localhost:8080/v1/gnn/usuarios/${id}`
     
     const options = {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dados)
+
+        body: dados instanceof FormData ? dados : JSON.stringify(dados)
+    }
+
+    if (!(dados instanceof FormData)) {
+        options.headers = { 'Content-Type': 'application/json' }
     }
 
     const response = await fetch(url, options)
+    if (!response.ok) throw new Error(`Erro na API: ${response.status}`)
     return response.json()
 }
 

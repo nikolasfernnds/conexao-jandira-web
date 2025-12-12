@@ -2,7 +2,8 @@
 
 export async function listarTodasNoticias() {
 
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/noticia`
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/noticia`
+    const url = `http://localhost:8080/v1/gnn/noticia`
     
     const response = await fetch(url)
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`) // Verifica se deu 404 ou 500
@@ -14,7 +15,8 @@ export async function listarTodasNoticias() {
 
 export async function listarNoticiaPeloId(id) {
 
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/noticia/${id}`
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/noticia/${id}`
+    const url = `http://localhost:8080/v1/gnn/noticia/${id}`
     
     const response = await fetch(url)
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`) // Verifica se deu 404 ou 500
@@ -24,23 +26,26 @@ export async function listarNoticiaPeloId(id) {
 
 }
 
-export async function cadastrarNovaNoticia(noticia){
-
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/noticia`
+export async function cadastrarNovaNoticia(dados) {
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/noticia`
+    const url = `http://localhost:8080/v1/gnn/noticia`
 
     const options = {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(noticia)
+        body: dados instanceof FormData ? dados : JSON.stringify(dados)
     }
-    const response = await fetch(url, options)
-    
-    const dados = response.json()
 
-    return dados
+    if (!(dados instanceof FormData)) {
+        options.headers = { 'Content-Type': 'application/json' }
+    }
 
+    try {
+        const response = await fetch(url, options)
+        return await response.json()
+    } catch (error) {
+        console.error(error)
+        return false
+    }
 }
 
 export async function atualizarNoticia(idNoticia, noticia) {

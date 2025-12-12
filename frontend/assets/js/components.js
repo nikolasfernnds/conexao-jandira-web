@@ -38,6 +38,12 @@ function toggleNavbar() {
         return
     }
 
+    const userStorage = localStorage.getItem('user')
+
+    const usuario = userStorage ? JSON.parse(userStorage) : null
+
+    const nomeUsuario = usuario ? usuario.nickname : 'Visitante'
+
     const nav = document.createElement('nav')
     nav.id = 'navbar'
     nav.classList.add('sidebar-menu')
@@ -52,16 +58,13 @@ function toggleNavbar() {
     imgContainer.classList.add('menu-avatar-container')
 
     const userImg = document.createElement('img')
-    userImg.src = '../../assets/img/teste.webp'
+    userImg.src = usuario && usuario.foto_perfil ? usuario.foto_perfil : '../../assets/img/profile.svg'
     userImg.classList.add('menu-avatar')
+    userImg.style.borderRadius = '100%'
 
     imgContainer.appendChild(userImg)
 
-    const userStorage = localStorage.getItem('user')
-
-    const usuario = userStorage ? JSON.parse(userStorage) : null
-
-    const nomeUsuario = usuario ? usuario.nickname : 'Visitante'
+    
 
     const userName = document.createElement('span')
     userName.textContent = `Olá, ${nomeUsuario}`
@@ -138,12 +141,16 @@ function createLink(href, iconSrc, text) {
 function createHeader() {
     const header = document.getElementById('header')
 
+    const userStorage = localStorage.getItem('user')
+    const usuario = userStorage ? JSON.parse(userStorage) : null
+
     const perfilIcons = document.createElement('div')
     perfilIcons.classList.add('perfil-icons')
 
     const profileImg = document.createElement('img')
-    profileImg.classList.add('header-icon')
-    profileImg.src = '../../assets/img/profile.svg'
+    profileImg.src = usuario && usuario.foto_perfil ? usuario.foto_perfil : '../../assets/img/profile.svg'
+    profileImg.style.borderRadius = '50%' 
+    profileImg.style.objectFit = 'cover'
     profileImg.addEventListener('click', () => {
         window.location.href = '../../pages/perfil/index.html'
     })
@@ -331,7 +338,7 @@ function createNotificationItem(notificacao) {
             notificacao.lida = true
 
             const badge = document.querySelector('.notification-badge')
-            if(badge) {
+            if (badge) {
                 let count = parseInt(badge.textContent)
                 if (!isNaN(count)) {
                     count--
@@ -459,10 +466,10 @@ async function createModalArea(modal) {
 async function atualizarBadgeNotificacao(idUsuario, badgeElement) {
     try {
         const dados = await listarNotificacoesDoUsuario(idUsuario)
-        
+
         if (dados && dados.itens && dados.itens.notificacao) {
-            const lista = Array.isArray(dados.itens.notificacao) 
-                ? dados.itens.notificacao 
+            const lista = Array.isArray(dados.itens.notificacao)
+                ? dados.itens.notificacao
                 : [dados.itens.notificacao]
 
             const naoLidas = lista.filter(n => !n.lida).length
