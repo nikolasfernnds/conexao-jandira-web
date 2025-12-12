@@ -1,8 +1,8 @@
 'use strict'
 
 export async function listarOcorrencias() {
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia`
-    // const url = `http://localhost:8080/v1/gnn/ocorrencia`
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia`
+    const url = `http://localhost:8080/v1/gnn/ocorrencia`
     const response = await fetch(url)
     
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`) // Verifica se deu 404 ou 500
@@ -10,8 +10,8 @@ export async function listarOcorrencias() {
 }
 
 export async function listarOcorrenciaPeloId(id) {
-   const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/${id}`
-    // const url = `http://localhost:8080/v1/gnn/ocorrencia/${id}`
+//    const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/${id}`
+    const url = `http://localhost:8080/v1/gnn/ocorrencia/${id}`
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`)
@@ -19,8 +19,8 @@ export async function listarOcorrenciaPeloId(id) {
 }
 
 export async function listarOcorrenciasDoUsuario(usuarioId) {
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/usuario/${usuarioId}`
-    // const url = `http://localhost:8080/v1/gnn/ocorrencia/usuario/${usuarioId}`
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia/usuario/${usuarioId}`
+    const url = `http://localhost:8080/v1/gnn/ocorrencia/usuario/${usuarioId}`
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`Erro na API: ${response.status}`)
@@ -35,20 +35,28 @@ export async function listarOcorrenciaPeloTipo(tipoOcorrencia) {
     return response.json()
 }
 
-export async function criarOcorrencia(ocorrencia) {
-    
-    const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia`
+export async function criarOcorrencia(formData) {
+    // const url = `https://gnn-jandira.onrender.com/v1/gnn/ocorrencia`
+    const url = `http://localhost:8080/v1/gnn/ocorrencia`
 
     const options = {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ocorrencia)
+        body: formData
     }
-    const response = await fetch(url, options)
-    return response.json()
 
+    try {
+        const response = await fetch(url, options)
+        
+        if (!response.ok) {
+            const erroTexto = await response.text()
+            throw new Error(`Erro na API: ${response.status} - ${erroTexto}`)
+        }
+        
+        return await response.json()
+    } catch (error) {
+        console.error('Erro ao criar ocorrência:', error)
+        return false // ou throw error se preferir tratar na tela
+    }
 }
 
 export async function atualizarStatusOcorrencia(idOcorrencia, idStatus, idUsuario) {

@@ -7,6 +7,7 @@
 
  const ocorrenciaDAO = require('../../model/DAO/ocorrencias/ocorrencias.js')
  const defaultMessages = require('../modulo/configMessages.js')
+ const cloudinary = require('../../services/cloudinary.js')
 
 const listarTodasOcorrencias = async function() {
     try {
@@ -119,16 +120,24 @@ const buscarOcorrenciaUsuario = async function (id) {
     }
 }
 
-const criarNovaOcorrencia = async function (ocorrencia, contentType) {
+const criarNovaOcorrencia = async function (ocorrencia, contentType, arquivo) {
     let MESSAGES = JSON.parse(JSON.stringify(defaultMessages))
 
     try {
-        if (String(contentType).toUpperCase() === 'APPLICATION/JSON') {
+        // Valida se é JSON OU Multipart (para aceitar o arquivo)
+        if (String(contentType).toLowerCase().includes('multipart/form-data') || String(contentType).toUpperCase() === 'APPLICATION/JSON') {
+
+            // Upload da Imagem (Se existir)
+            if (arquivo) {
+                const urlFoto = await cloudinary.uploadImage(arquivo)
+
+                // Adiciona a URL ao objeto que vai para o DAO
+                ocorrencia.foto_ocorrencia = urlFoto
+            }
 
             let validar = await validarDadosOcorrencia(ocorrencia)
 
             if (!validar) {
-
                 let result = await ocorrenciaDAO.setInsertOccurences(ocorrencia)
 
                 if (result) {
@@ -136,22 +145,17 @@ const criarNovaOcorrencia = async function (ocorrencia, contentType) {
                     MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_CREATED_ITEM.status_code
                     MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCESS_CREATED_ITEM.message
                     MESSAGES.DEFAULT_HEADER.itens = result
-
                     return MESSAGES.DEFAULT_HEADER
                 } else {
                     return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
                 }
-
             } else {
                 return validar
             }
-
         } else {
             return MESSAGES.ERROR_CONTENT_TYPE
         }
-
     } catch (error) {
-        //console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

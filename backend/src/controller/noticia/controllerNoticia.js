@@ -8,6 +8,8 @@
 
 const noticiaDAO = require('../../model/DAO/noticia/noticia.js');
 const defaultMessages = require('../modulo/configMessages.js');
+const cloudinary = require('../../services/cloudinary.js')
+
 
 // Função de Validação
 const validarDadosNoticia = async function (dados) {
@@ -175,41 +177,46 @@ const buscarNoticiaAutor = async function (id) {
 }
 
 // Inserir Notícia
-const criarNovaNoticia = async function (noticia, contentType) {
+const criarNovaNoticia = async function (noticia, contentType, arquivo) {
     let MESSAGES = JSON.parse(JSON.stringify(defaultMessages));
 
     try {
-        if (String(contentType).toUpperCase() === 'APPLICATION/JSON') {
+        if (String(contentType).toLowerCase().includes('multipart/form-data') || String(contentType).toUpperCase() === 'APPLICATION/JSON') {
 
-            let validar = await validarDadosNoticia(noticia);
-
-            if (!validar) {
-                noticia.data_publicacao = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-                let result = await noticiaDAO.setInsertNoticia(noticia);
-
-                if (result) {
-                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_CREATED_ITEM.status;
-                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_CREATED_ITEM.status_code;
-                    MESSAGES.DEFAULT_HEADER.message = 'Notícia criada com sucesso.';
-                    MESSAGES.DEFAULT_HEADER.itens = result;
-
-                    return MESSAGES.DEFAULT_HEADER;
-                } else {
-                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;
-                }
-
-            } else {
-                return validar;
+            if (arquivo) {
+                const urlFoto = await cloudinary.uploadImage(arquivo)
+                
+                noticia.foto_capa = urlFoto
+                noticia.imagem_capa = urlFoto
             }
 
-        } else {
-            return MESSAGES.ERROR_CONTENT_TYPE;
-        }
+            if (!noticia.destaque) noticia.destaque = 0;
 
+            let validar = await validarDadosNoticia(noticia)
+
+            if (!validar) {
+                noticia.data_publicacao = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+                let result = await noticiaDAO.setInsertNoticia(noticia)
+
+                if (result) {
+                    MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCESS_CREATED_ITEM.status
+                    MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCESS_CREATED_ITEM.status_code
+                    MESSAGES.DEFAULT_HEADER.message = 'Notícia criada com sucesso.'
+                    MESSAGES.DEFAULT_HEADER.itens = result
+                    return MESSAGES.DEFAULT_HEADER
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                }
+            } else {
+                return validar
+            }
+        } else {
+            return MESSAGES.ERROR_CONTENT_TYPE
+        }
     } catch (error) {
-        console.error("Erro no Controller criarNovaNoticia:", error);
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;
+        console.error(error)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 

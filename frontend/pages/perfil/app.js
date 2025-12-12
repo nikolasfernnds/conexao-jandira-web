@@ -140,41 +140,62 @@ if (btnSalvar) {
     btnSalvar.addEventListener('click', async () => {
         
         const jsonUser = localStorage.getItem('user')
+        if (!jsonUser) return
         const usuarioLogado = JSON.parse(jsonUser)
         const id = usuarioLogado.id_usuario 
-        const dadosAtualizados = {
-            nome_completo: document.getElementById('input-nome').value,
-            nickname: usuarioLogado.nickname,
-            email: document.getElementById('input-email').value,
-            data_nascimento: document.getElementById('input-nasc').value,
-            senha: "", 
 
-            endereco: {
-                cep: document.getElementById('input-cep').value,
-                logradouro: document.getElementById('input-endereco').value,
-                numero: document.getElementById('input-numero').value,
-                bairro: document.getElementById('input-bairro').value,
-                cidade: document.getElementById('input-cidade').value,
-                uf: document.getElementById('input-uf').value || "SP"
-            }
+        const formData = new FormData()
+
+        formData.append('nome_completo', document.getElementById('input-nome').value)
+        formData.append('nickname', usuarioLogado.nickname)
+        formData.append('email', document.getElementById('input-email').value)
+        formData.append('data_nascimento', document.getElementById('input-nasc').value)
+        
+
+
+        formData.append('cep', document.getElementById('input-cep').value)
+        formData.append('logradouro', document.getElementById('input-endereco').value)
+        formData.append('numero', document.getElementById('input-numero').value)
+        formData.append('bairro', document.getElementById('input-bairro').value)
+        formData.append('cidade', document.getElementById('input-cidade').value)
+        formData.append('uf', document.getElementById('input-uf').value || "SP")
+
+        const inputFoto = document.getElementById('input-foto')
+        if (inputFoto && inputFoto.files.length > 0) {
+            formData.append('foto_perfil', inputFoto.files[0])
         }
 
-        
         try {
-            const resultado = await atualizarUsuario(id, dadosAtualizados)
+            const btnTexto = btnSalvar.textContent
+            btnSalvar.textContent = "Salvando..."
+            btnSalvar.disabled = true
+
+            const resultado = await atualizarUsuario(id, formData)
 
             if (resultado.status) {
                 alert('Perfil atualizado com sucesso!')
                 
-                usuarioLogado.nome_completo = dadosAtualizados.nome_completo
-                localStorage.setItem('user', JSON.stringify(usuarioLogado))
+                const novoUsuario = resultado.itens
+                
+                const usuarioAtualizado = { ...usuarioLogado, ...novoUsuario }
+                
+                if (novoUsuario.foto_perfil) {
+                    usuarioAtualizado.foto_perfil = novoUsuario.foto_perfil
+                }
 
-                toggleEdicao(false) 
+                localStorage.setItem('user', JSON.stringify(usuarioAtualizado))
+
+                window.location.reload()
             } else {
-                alert('Erro ao atualizar: ' + resultado.message)
+                alert('Erro ao atualizar: ' + (resultado.message || 'Erro desconhecido'))
             }
         } catch (error) {
+            console.error(error)
             alert('Erro de comunicação com o servidor.')
+        } finally {
+            btnSalvar.textContent = "Salvar Alterações"
+            btnSalvar.disabled = false
+            toggleEdicao(false)
         }
     })
 }
@@ -189,6 +210,11 @@ async function carregarDadosPerfil() {
 
     const usuarioLogado = JSON.parse(jsonUser)
     const id = usuarioLogado.id_usuario
+
+    const imgPreview = document.getElementById('img-preview')
+    if (imgPreview && usuarioLogado.foto_perfil) {
+        imgPreview.src = usuarioLogado.foto_perfil
+    }
 
     const resultado = await listarUsuario(id)
 
@@ -218,6 +244,13 @@ async function carregarDadosPerfil() {
         if(document.getElementById('input-bairro')) document.getElementById('input-bairro').value = dados.bairro || ''
         if(document.getElementById('input-cidade')) document.getElementById('input-cidade').value = dados.cidade || ''
         if(document.getElementById('input-uf')) document.getElementById('input-uf').value = dados.uf || 'SP'
+
+        if (dados.foto_perfil && imgPreview) {
+            imgPreview.src = dados.foto_perfil
+            
+            usuarioLogado.foto_perfil = dados.foto_perfil
+            localStorage.setItem('user', JSON.stringify(usuarioLogado))
+        }
 
     } else {
         alert.error("Erro ao buscar dados do perfil:", resultado.message)

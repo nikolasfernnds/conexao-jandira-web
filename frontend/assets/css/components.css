@@ -13,6 +13,8 @@ header {
 header img {
     width: auto;
     height: 36px;
+    width: 36px;
+    object-fit: cover;
 }
 
 .titulo {
@@ -95,15 +97,20 @@ header img {
     display: flex;
     justify-content: center;
     align-items: center;
+    object-fit: cover;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 }
 
 .menu-avatar {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
+    object-position: center;
     object-fit: cover;
     background-color: var(--primary-color);
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border-radius: 0%;
+    border-bottom-right-radius: 0%;
+    border-bottom-left-radius: 0%;
 }
 
 .menu-username {
@@ -403,6 +410,7 @@ header img {
 
     header img {
         height: 50px;
+        width: 50px;
         margin-block: 4px;
     }
 

@@ -29,10 +29,10 @@
                 <button class="btn-tab" id="btn-minhas">Minhas Ocorrências</button>
             </div>
 
-            
+
 
             <div id="view-feed" class="lista-ocorrencias">
-                </div>
+            </div>
 
             <div id="view-minhas" class="lista-ocorrencias hidden">
                 <div class="filtros-container">
@@ -41,7 +41,7 @@
                     <button class="btn-filtro" id="btn-filtro-encerradas">Encerradas</button>
                 </div>
                 <div id="container-lista-minhas" class="lista-minhas-ocorrencias">
-                    </div>
+                </div>
             </div>
 
             <div id="modal-detalhes-overlay" class="modal-overlay">
@@ -109,7 +109,8 @@
                                 </div>
                             </div>
                             <div class="escrever-comentario">
-                                <input type="text" class="input-comentario hidden" id="input-comentario" placeholder="Digite seu comentario">
+                                <input type="text" class="input-comentario hidden" id="input-comentario"
+                                    placeholder="Digite seu comentario">
                             </div>
                         </div>
                     </div>
@@ -136,7 +137,11 @@
                             <input type="text" class="input-padrao" placeholder="Título (Ex: Buraco na rua)"
                                 id="input-titulo">
 
-                            <select class="input-padrao" id="input-tipo">
+                            <textarea class="input-padrao" id="input-descricao"
+                                placeholder="Descreva o problema com detalhes..." rows="4"
+                                ></textarea>
+
+                            <select class="input-padrao tipo-ocorrencia" id="input-tipo">
                                 <option value="" disabled selected>Tipo de Ocorrência...</option>
                                 <option value="iluminacao">Iluminação Pública</option>
                                 <option value="via">Pavimentação / Buraco</option>
@@ -155,7 +160,6 @@
 
                             <div class="row-inputs">
                                 <input type="text" class="input-padrao" placeholder="Bairro" id="input-bairro">
-                                <input type="text" class="input-padrao" placeholder="Cidade" id="input-cidade">
                                 <input type="text" class="input-padrao" placeholder="UF" style="width: 20%;"
                                     id="input-uf">
                             </div>
@@ -165,7 +169,7 @@
 
                             <div class="row-inputs">
                                 <input type="date" class="input-padrao" id="input-data">
-                                <select class="input-padrao" id="input-urgencia">
+                                <select class="input-padrao input-urgencia" id="input-urgencia">
                                     <option value="baixa">Urgência Baixa</option>
                                     <option value="media">Média</option>
                                     <option value="alta">Alta</option>

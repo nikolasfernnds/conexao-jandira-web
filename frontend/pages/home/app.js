@@ -17,11 +17,35 @@ const detalheImgContainer = document.getElementById('detalhe-img-container')
 const detalheFoto = document.getElementById('detalhe-foto')
 const btnFecharDetalhes = document.getElementById('btn-fechar-detalhes')
 
+const modalNoticia = document.getElementById('modal-noticia-overlay')
+const btnAbrirModal = document.getElementById('btn-nova-noticia')
+const btnFecharModal = document.getElementById('btn-fechar-noticia')
+const btnCancelar = document.getElementById('btn-cancelar-noticia')
+const btnPublicar = document.getElementById('btn-publicar-noticia')
+
+const fileInput = document.getElementById('file-input-noticia')
+const imgPreview = document.getElementById('image-preview-noticia')
+const labelPreview = document.getElementById('preview-label-noticia')
+const inputTitulo = document.getElementById('noticia-titulo')
+const selectCategoria = document.getElementById('noticia-categoria')
+const inputConteudo = document.getElementById('noticia-conteudo')
+
 const destaqueContainer = document.getElementById('destaque-container')
 const destaqueTitulo = document.getElementById('destaque-titulo')
 const destaqueData = document.getElementById('destaque-data')
 const destaqueImagem = document.getElementById('destaque-imagem')
 const destaqueTexto = document.getElementById('destaque-texto')
+
+function verificarAdmin() {
+    const userStorage = localStorage.getItem('user')
+    if (userStorage) {
+        const user = JSON.parse(userStorage)
+        if (user.perfil === 'admin') {
+            const adminControls = document.getElementById('admin-controls')
+            if (adminControls) adminControls.classList.remove('hidden')
+        }
+    }
+}
 
 function criarElemento(tag, classe, texto = '') {
     const elemento = document.createElement(tag)
@@ -58,12 +82,13 @@ async function abrirModalDetalhes(id) {
         detalheData.textContent = formatarData(dados.data_publicacao)
         detalheData.classList.add('detalhe-data')
 
-        if (dados.imagem_url) {
-            detalheFoto.src = '../../assets/img/teste.webp'
+        const foto = dados.foto_capa || dados.imagem_capa || dados.imagem_url
+
+        if (foto) {
+            detalheFoto.src = foto
             detalheImgContainer.classList.remove('hidden')
         } else {
             detalheFoto.src = '../../assets/img/teste.webp'
-            detalheImgContainer.classList.add('hidden')
         }
 
 
@@ -93,7 +118,7 @@ function criarCardNoticia(noticia) {
 
     const spanData = criarElemento('span', 'data-badge-card', formatarData(noticia.data_publicacao))
     const imgNoticia = criarElemento('img')
-    imgNoticia.src = '../../assets/img/teste.webp'
+    imgNoticia.src = noticia.foto_capa || noticia.imagem_capa || '../../assets/img/teste.webp'
     divImg.appendChild(spanData)
     divImg.appendChild(imgNoticia)
 
@@ -122,15 +147,15 @@ async function carregarNoticias() {
         if (todasNoticias.length === 0) {
             containerNoticia.replaceChildren(criarMensagemErro('Nenhuma notícia encontrada.'))
             const sessaoPrincipal = document.getElementById('noticia-principal')
-            if(sessaoPrincipal) sessaoPrincipal.style.display = 'none'
+            if (sessaoPrincipal) sessaoPrincipal.style.display = 'none'
             return
         }
 
-        
+
         const indiceAleatorio = Math.floor(Math.random() * todasNoticias.length)
-        
+
         const noticiaDestaque = todasNoticias[indiceAleatorio]
-        
+
         preencherNoticiaPrincipal(noticiaDestaque)
 
         const listaGrid = todasNoticias.filter(n => n !== noticiaDestaque)
@@ -149,18 +174,17 @@ async function carregarNoticias() {
 
 }
 
-function preencherNoticiaPrincipal(noticia){
+function preencherNoticiaPrincipal(noticia) {
 
-    if(!noticia)
+    if (!noticia)
         return
 
     if (destaqueTitulo)
         destaqueTitulo.textContent = noticia.titulo
     if (destaqueData)
         destaqueData.textContent = formatarData(noticia.data_publicacao)
-    if(destaqueImagem)
-        destaqueImagem.src = '../../assets/img/teste.webp'
-
+    if (destaqueImagem)
+        destaqueImagem.src = noticia.foto_capa || noticia.imagem_capa || '../../assets/img/teste.webp'
     if (destaqueTexto) {
         const textoOriginal = noticia.conteudo || noticia.descricao || ''
         const textoResumido = textoOriginal.length > 200 ? textoOriginal.substring(0, 200) + '...' : textoOriginal
@@ -170,15 +194,116 @@ function preencherNoticiaPrincipal(noticia){
     if (destaqueContainer) {
         const novoContainer = destaqueContainer.cloneNode(true)
         destaqueContainer.parentNode.replaceChild(novoContainer, destaqueContainer)
-        
+
         novoContainer.addEventListener('click', () => abrirModalDetalhes(noticia.id_noticia))
-        
+
     }
 
+}
+
+function abrirModal() {
+    modalNoticia.classList.add('active')
+    document.body.classList.add('no-scroll')
+}
+
+function fecharModal() {
+    modalNoticia.classList.remove('active')
+    document.body.classList.remove('no-scroll')
+    limparFormulario()
+}
+
+if (btnAbrirModal) {
+    btnAbrirModal.addEventListener('click', () => {
+        modalNoticia.classList.add('active')
+        document.body.classList.add('no-scroll')
+    })
+}
+
+if (btnFecharModal) {
+    btnFecharModal.addEventListener('click', (e) => {
+        e.preventDefault()
+        modalDetalhesOverlay.classList.remove('active')
+        document.body.classList.remove('no-scroll')
+    })
+}
+
+function limparFormulario() {
+    inputTitulo.value = ''
+    selectCategoria.value = ''
+    inputConteudo.value = ''
+    fileInput.value = ''
+
+    imgPreview.src = ''
+    imgPreview.classList.add('hidden')
+    labelPreview.style.display = 'flex'
+}
+
+if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+        const arquivo = e.target.files[0]
+        if (arquivo) {
+            const reader = new FileReader()
+            reader.onload = (evt) => {
+                imgPreview.src = evt.target.result
+                imgPreview.classList.remove('hidden')
+                labelPreview.style.display = 'none'
+            }
+            reader.readAsDataURL(arquivo)
+        }
+    })
+}
+
+if (btnPublicar) {
+    btnPublicar.addEventListener('click', async () => {
+        if (!inputTitulo.value || !selectCategoria.value || !inputConteudo.value) {
+            alert('Preencha todos os campos obrigatórios!')
+            return
+        }
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+            alert('Escolha uma imagem de capa para a notícia.')
+            return
+        }
+
+        const userStorage = JSON.parse(localStorage.getItem('user') || '{}')
+        const idUsuario = userStorage.id_usuario || 1
+
+        const formData = new FormData()
+        formData.append('id_autor', idUsuario)
+        formData.append('titulo', inputTitulo.value)
+        formData.append('id_categoria_noticia', selectCategoria.value)
+        formData.append('conteudo', inputConteudo.value)
+        formData.append('foto_capa', fileInput.files[0])
+
+        const textoOriginal = btnPublicar.textContent
+        btnPublicar.textContent = 'Publicando...'
+        btnPublicar.disabled = true
+
+        try {
+            const resultado = await cadastrarNovaNoticia(formData)
+
+            if (resultado && (resultado.status || resultado.status_code === 201)) {
+                alert('Notícia publicada com sucesso!')
+                fecharModal()
+                window.location.reload()
+            } else {
+                alert('Erro ao publicar: ' + (resultado.message || 'Erro desconhecido'))
+            }
+        } catch (error) {
+            console.error(error)
+            alert('Erro de comunicação com o servidor.')
+        } finally {
+            btnPublicar.textContent = textoOriginal
+            btnPublicar.disabled = false
+        }
+    })
 }
 
 if (btnFecharDetalhes) btnFecharDetalhes.addEventListener('click', fecharModalDetalhes)
 if (modalDetalhesOverlay) modalDetalhesOverlay.addEventListener('click', (e) => { if (e.target === modalDetalhesOverlay) fecharModalDetalhes() })
 
 
-document.addEventListener('DOMContentLoaded', carregarNoticias)
+document.addEventListener('DOMContentLoaded', () => {
+    carregarNoticias()
+    verificarAdmin()
+})

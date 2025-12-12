@@ -10,44 +10,43 @@ const { PrismaClient } = require('../../../../generated/prisma')
 const prisma = new PrismaClient()
 
 // Listar todas as notícias
-const getSelectAllNoticias = async function() {
+const getSelectAllNoticias = async function () {
     try {
         let sql = `SELECT * FROM view_noticias ORDER BY data_publicacao DESC`
         let result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(result))
+        if (Array.isArray(result))
             return result
         else
             return false
     } catch (error) {
-        
+
         return false
     }
 }
 
 // Buscar notícia por ID
-const getSelectNoticiaById = async function(id) {
+const getSelectNoticiaById = async function (id) {
     try {
         let sql = `SELECT * FROM view_noticias WHERE id_noticia = ${id}`
         let result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(result))
+        if (Array.isArray(result))
             return result
         else
             return false
     } catch (error) {
-        console.log(error)
         return false
     }
 }
 
 // Buscar notícia por ID de Categoria
-const getSelectNoticiaByCategory = async function(idCategoria) {
+const getSelectNoticiaByCategory = async function (idCategoria) {
     try {
         let sql = `SELECT * FROM view_noticias WHERE id_categoria_noticia = ${idCategoria}`
         let result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(result))
+        if (Array.isArray(result))
             return result
         else
             return false
@@ -57,12 +56,12 @@ const getSelectNoticiaByCategory = async function(idCategoria) {
 }
 
 // Buscar notícia por ID de Autor (Usuário)
-const getSelectNoticiaByAuthor = async function(idAutor) {
+const getSelectNoticiaByAuthor = async function (idAutor) {
     try {
         let sql = `SELECT * FROM view_noticias WHERE id_autor = ${idAutor}`
         let result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(result))
+        if (Array.isArray(result))
             return result
         else
             return false
@@ -72,14 +71,14 @@ const getSelectNoticiaByAuthor = async function(idAutor) {
 }
 
 // Buscar o ID da última notícia inserida
-const getSelectLastId = async function() {
+const getSelectLastId = async function () {
     try {
         let sql = `SELECT * FROM view_noticias ORDER BY id_noticia DESC LIMIT 1`
 
         let result = await prisma.$queryRawUnsafe(sql)
 
-        if(Array.isArray(result) && result.length > 0)
-            return Number(result[0].id_noticia) 
+        if (Array.isArray(result) && result.length > 0)
+            return Number(result[0].id_noticia)
         else
             return false
     } catch (error) {
@@ -91,8 +90,8 @@ const getSelectLastId = async function() {
 const setInsertNoticia = async function (noticia) {
     try {
 
-        const jsonData = JSON.stringify(noticia) 
-        
+        const jsonData = JSON.stringify(noticia)
+
         const sql = `CALL sp_criar_noticia('${jsonData}')`
         const result = await prisma.$queryRawUnsafe(sql)
 
@@ -119,7 +118,7 @@ const setUpdateNoticia = async function (id, dadosNoticia) {
                    WHERE id_noticia = ${id}`
         let result = await prisma.$executeRawUnsafe(sql)
 
-        if(result)
+        if (result)
             return true
         else
             return false
@@ -130,14 +129,14 @@ const setUpdateNoticia = async function (id, dadosNoticia) {
 }
 
 // Deletar Notícia
-const setDeleteNoticia = async function(id) {
+const setDeleteNoticia = async function (id) {
     try {
         let sql = `DELETE from tbl_noticia WHERE id_noticia = ${id}`
         let result = await prisma.$executeRawUnsafe(sql)
 
-        if(result)
+        if (result)
             return true
-        else    
+        else
             return false
     } catch (error) {
         return false

@@ -21,7 +21,8 @@
     <section class="noticia-principal" id="noticia-principal">
       <article class="container-noticia-principal" id="destaque-container">
         <div class="noticia-img">
-          <img src="../../assets/img/imagem-generica.svg" alt="imagem da noticia" id="destaque-imagem" class="destaque-imagem" />
+          <img src="../../assets/img/imagem-generica.svg" alt="imagem da noticia" id="destaque-imagem"
+            class="destaque-imagem" />
         </div>
         <div class="info-noticia">
           <div class="data-badge-hero" id="destaque-data">25 NOV</div>
@@ -43,6 +44,56 @@
       <div class="grid-noticia" id="grid-noticia">
       </div>
     </section>
+
+    <div id="admin-controls" class="container-admin hidden"
+      style="width: 90%; display: flex; justify-content: flex-end; margin-top: 20px;">
+      <button id="btn-nova-noticia" class="btn-nova-ocorrencia">+</button>
+    </div>
+
+    <div id="modal-noticia-overlay" class="modal-overlay">
+      <div class="modal-box modal-grande">
+        <div class="modal-header">
+          <h2>Publicar Notícia</h2>
+          <button id="btn-fechar-noticia" class="btn-close">✖</button>
+        </div>
+
+        <form class="modal-form" id="form-noticia">
+          <div class="coluna-foto">
+            <label for="file-input-noticia" class="preview-box" id="preview-label-noticia">
+              <div class="icon-upload"><i class="fas fa-camera"></i></div>
+              <span>Capa da Notícia</span>
+            </label>
+            <img id="image-preview-noticia" class="preview-image hidden" src="" alt="Prévia">
+            <input type="file" id="file-input-noticia" class="hidden" accept="image/*">
+          </div>
+
+          <div class="coluna-campos">
+            <label class="label-input">Título</label>
+            <input type="text" class="input-padrao" id="noticia-titulo" placeholder="Ex: Reforma da Praça Central">
+
+            <label class="label-input">Categoria</label>
+            <select class="input-padrao" id="noticia-categoria">
+              <option value="" disabled selected>Selecione...</option>
+              <option value="1">Geral</option>
+              <option value="2">Infraestrutura</option>
+              <option value="3">Segurança</option>
+              <option value="4">Educação</option>
+              <option value="5">Saúde</option>
+            </select>
+
+            <label class="label-input">Conteúdo</label>
+            <textarea class="input-padrao area-texto" id="noticia-conteudo"
+              placeholder="Escreva o corpo da notícia aqui..."></textarea>
+
+            <div class="form-footer">
+              <button type="button" class="btn-cancelar" id="btn-cancelar-noticia">Cancelar</button>
+              <button type="button" class="btn-confirmar" id="btn-publicar-noticia">Publicar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <div id="modal-detalhes-overlay" class="modal-overlay">
       <div class="modal-box modal-detalhes">
         <div class="modal-header">
