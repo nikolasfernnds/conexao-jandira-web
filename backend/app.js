@@ -34,6 +34,7 @@ const ocorrenciaRoutes = require('./src/routes/ocorrencias/ocorrenciasRoutes.js'
 const noticiaRoutes = require('./src/routes/noticia/noticiaRoutes.js')
 const comentarioRoutes = require('./src/routes/comentario/comentarioRoutes.js')
 const comentarioNoticiaRoutes = require('./src/routes/comentario_noticia/comentario_noticiaRoutes.js')
+const comentarioOcorrenciaRoutes = require('./src/routes/comentario_ocorrencia/comentario_ocorrenciaRoutes.js')
 const notificacaoRoutes = require('./src/routes/notificacao/notificacaoRoutes.js')
 const notificacaoUsuarioRoutes = require('./src/routes/notificacao_usuario/notificacaoUsuarioRoutes.js')
 
@@ -45,6 +46,7 @@ app.use('/v1/gnn/notificacao', notificacaoRoutes)
 app.use('/v1/gnn/notificacao-usuario', notificacaoUsuarioRoutes)
 app.use('/v1/gnn/comentario', comentarioRoutes)
 app.use('/v1/gnn/comentario-noticia', comentarioNoticiaRoutes)
+app.use('/v1/gnn/comentario-ocorrencia', comentarioOcorrenciaRoutes)
 
 app.listen(PORT, function () {
     console.log('API GNN Jandira aguardando requisições na porta ' + PORT)
